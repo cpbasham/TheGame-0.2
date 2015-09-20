@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="http://code.jquery.com/jquery-latest.min.js")
+    script(src="/socket.io/socket.io.js")
+  body
+    block content
+    script(src='javascripts/phaser.js')
+    script(src='/game/main.js')
+    script(src='/dist/js/game.js')
+    script(src='javascripts/gamesockets.js')
+
+
+

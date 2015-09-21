@@ -1,66 +1,70 @@
-var express = require('express');
-var passport = require('passport');
+module.exports = function(express,passport){
 
-var router = express.Router();
+  // var express = require('express');
+  // var passport = require('passport');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+  var router = express.Router();
 
-// route for home page
-router.get('/', function(req, res) {
-    res.render('index.ejs'); // load the index.ejs file
-});
+  /* GET home page. */
+  router.get('/', function(req, res, next) {
+    res.render('index', { title: 'Express' });
+  });
 
-// route for login form
-// route for processing the login form
-// route for signup form
-// route for processing the signup form
+  // route for home page
+  router.get('/', function(req, res) {
+      res.render('index.ejs'); // load the index.ejs file
+  });
 
-// route for showing the profile page
-router.get('/profile', isLoggedIn, function(req, res) {
-    res.render('profile.ejs', {
-        user : req.user // get the user out of session and pass to template
-    });
-});
+  // route for login form
+  // route for processing the login form
+  // route for signup form
+  // route for processing the signup form
 
-// route for logging out
-router.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-});
+  // route for showing the profile page
+  router.get('/profile', isLoggedIn, function(req, res) {
+      res.render('profile.ejs', {
+          user : req.user // get the user out of session and pass to template
+      });
+  });
 
-// facebook routes
-// twitter routes
+  // route for logging out
+  router.get('/logout', function(req, res) {
+      req.logout();
+      res.redirect('/');
+  });
 
-// =====================================
-// GOOGLE ROUTES =======================
-// =====================================
-// send to google to do the authentication
-// profile gets us their basic information including their name
-// email gets their emails
-router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+  // facebook routes
+  // twitter routes
 
-// the callback after google has authenticated the user
-router.get('/auth/google/callback',
-        passport.authenticate('google', {
-                successRedirect : '/profile',
-                failureRedirect : '/'
-        }));
+  // =====================================
+  // GOOGLE ROUTES =======================
+  // =====================================
+  // send to google to do the authentication
+  // profile gets us their basic information including their name
+  // email gets their emails
+  router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+  // the callback after google has authenticated the user
+  router.get('/auth/google/callback',
+          passport.authenticate('google', {
+                  successRedirect : '/profile',
+                  failureRedirect : '/'
+          }));
 
 
 
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
+  // route middleware to make sure a user is logged in
+  function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on
-    if (req.isAuthenticated())
-        return next();
+      // if user is authenticated in the session, carry on
+      if (req.isAuthenticated())
+          return next();
 
-    // if they aren't redirect them to the home page
-    res.redirect('/');
+      // if they aren't redirect them to the home page
+      res.redirect('/');
+  }
+  return router;
 }
 
 
-module.exports = router;
+

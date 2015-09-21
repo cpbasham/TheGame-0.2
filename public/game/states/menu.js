@@ -51,6 +51,8 @@ Menu.prototype = {
 
   },
   startClick: function() {
+    this.game.socketFunctions = require('../clientSockets/sockets.js');
+    this.game.socketFunctions.startClick(this);
     this.game.state.start('play');
   },
   update: function() {

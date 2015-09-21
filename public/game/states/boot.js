@@ -2,6 +2,7 @@
 'use strict';
 
 function Boot() {
+
 }
 
 Boot.prototype = {

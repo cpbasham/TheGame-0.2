@@ -13,15 +13,41 @@ var app = express();
 
 server.listen(4000);
 
+var nextClientId = 0;
+var playerMap = {};
 io.sockets.on("connection", function(socket){
   console.log("socket connected");
+  socket.clientId = nextClientId;
+  nextClientId++;
+  playerMap[socket.clientId] = {x:0, y:0, dir:"right", isMoving:false};
+  // console.log("added", socket.clientId, "to playerMap");
 
-  socket.on("play", function(data){
-    console.log(data.data)
+  socket.emit("setup",
+    {
+      clientId: socket.clientId,
+      playerMap: playerMap
+    }
+  );
+
+  // console.log(io.sockets.sockets[0]);
+  // console.log(io.sockets.sockets[1]);
+
+  socket.on("disconnect", function(data) {
+    socket.broadcast.emit("playerDisconnected", {clientId: socket.clientId});
+    delete playerMap[socket.clientId];
   });
 
-  socket.on("update", function(data){
-    console.log(data.data)
+  socket.on("play", function(data){
+    socket.broadcast.emit("newPlayer", {clientId: socket.clientId});
+    // console.log(data.data)
+  });
+
+  socket.on("update", function(clientData){
+    var serverData  = playerMap[socket.clientId];
+    serverData.x    = clientData.player.position.x;
+    serverData.y    = clientData.player.position.y;
+    serverData.dir  = clientData.player.direction;
+    serverData.currentFrame = clientData.player.currentFrame;
   });
 
   socket.on("click", function(data){
@@ -42,7 +68,10 @@ io.sockets.on("connection", function(socket){
 
 });
 
-
+setInterval(function() {
+  io.emit("updateAll", playerMap);
+}, 1000 / 30);
+// }, 1000 / 1);
 
 
 

@@ -1,4 +1,65 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var Player = require("../prefabs/player.js");
+socketFunctions = {};
+
+socketFunctions.startClick = function(ctx) {
+  ctx.game.state.socket = io.connect();
+  ctx.game.state.socket.emit("play", {});
+}
+
+socketFunctions.createPlay = function(ctx) {
+  var game = ctx.game;
+  var enemies = ctx.enemies;
+  var socket = ctx.game.state.socket;
+  socket.on("setup", function(data) {
+    socket.clientId = data.clientId;
+    for (var key in data.playerMap) {
+      key = parseInt(key);
+      if (key === socket.clientId) {continue;}
+      var enemy = new Player(game, 200, 100, 'player', false);
+      game.add.existing(enemy);
+      enemies[key] = enemy;
+    }
+  });
+  socket.on("newPlayer", function(data) {
+    var enemy = new Player(game, 200, 100, 'player', false);
+    game.add.existing(enemy);
+    enemies[data.clientId] = enemy;
+  });
+  socket.on("updateAll", function(data) {
+    for (var key in data) {
+      key = parseInt(key);
+      if (key === socket.clientId) {continue;}
+      var enemy = enemies[key];
+      var enemyData = data[key];
+      enemy.position.x = enemyData.x;
+      enemy.position.y = enemyData.y;
+      // console.log("About to update direction");
+      enemy.face(enemyData.dir);
+      enemy.frame = enemyData.currentFrame;
+      // enemy.animate(enemyData.isMoving)
+    }
+  });
+  socket.on("playerDisconnected", function(data) {
+    delete enemies[data.clientId].destroy();
+  });
+}
+
+socketFunctions.updatePlay = function(ctx) {
+  ctx.game.state.socket.emit("update", {
+    player: {
+      position: {
+        x: ctx.player1.position.x,
+        y: ctx.player1.position.y
+      },
+      direction: ctx.player1.body.direction,
+      currentFrame: ctx.player1.frame
+    }
+  });
+}
+
+module.exports = socketFunctions
+},{"../prefabs/player.js":5}],2:[function(require,module,exports){
 'use strict';
 
 //global variables
@@ -15,7 +76,7 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./states/boot":5,"./states/gameover":6,"./states/menu":7,"./states/play":8,"./states/preload":9}],2:[function(require,module,exports){
+},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/play":9,"./states/preload":10}],3:[function(require,module,exports){
 'use strict';
 
 var bullets;
@@ -73,7 +134,7 @@ Bullet.prototype.update = function(){
 
   module.exports = Bullet;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var Ground = function(game, x, y, width, height) {
@@ -98,7 +159,7 @@ Ground.prototype.update = function() {
 
 module.exports = Ground;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var cursors;
@@ -109,10 +170,7 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   // this.game.physics.enable(this);
   // this.game.physics.arcade.gravity.y = 500;
 
-  this.game.physics.arcade.enableBody(this);
-
   this.anchor.setTo(0.5, 0.5);
-
   this.scale.setTo(0.5, 0.5);
 
   this.animations.add('run');
@@ -123,40 +181,61 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   //this.animations.add('jump',[], 10, true);
   //this.animations.add('shoot'[] 10, true);
 
+  this.game.physics.arcade.enableBody(this);
   this.body.collideWorldBounds = true;
+  this.face("right");
+  this.animate(false);
+
   // this.checkWorldBounds = true;
   // this.outOfBoundsKill = true;
 
+  var game = this.game;
+  var ctx = this;
   if (!controllable) {
-    this.update = function() {
-      return;
-    }
-  };
+    this.update = function() {}
+  } else {
+    cursors = this.game.input.keyboard.createCursorKeys();
+  }
 
 };
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
-
-Player.prototype.update = function() {
-  this.game.physics.arcade.gravity.y = 500;
-  cursors = this.game.input.keyboard.createCursorKeys();
-
-
-  this.body.velocity.x = 0;
-
-  if (cursors.left.isDown) {
-    this.body.velocity.x = -750;
-    this.anchor.setTo(0.5, 0);
+Player.prototype.face = function(direction) {
+  if (direction === "left") {
+    this.body.direction = "left";
     this.scale.x = -0.5;
-    this.animations.play('left');
-  } else if (cursors.right.isDown) {
+  } else if (direction === "right") {
+    this.body.direction = "right";
     this.scale.x = 0.5;
-    this.body.velocity.x = 750;
-    this.animations.play('right');
+  }
+}
+Player.prototype.animate = function(moving) {
+  if (moving) {
+    var velocity = (this.body.direction === "left" ? -750 : 750);
+    this.body.velocity.x = velocity;
+    this.animations.play(this.body.direction);
   } else {
     this.animations.stop();
     this.frame = 0;
+  }
+
+}
+
+Player.prototype.update = function() {
+
+  this.game.physics.arcade.gravity.y = 500;
+  cursors = this.game.input.keyboard.createCursorKeys();
+
+  this.body.velocity.x = 0;
+  if (cursors.left.isDown) {
+    this.face("left");
+    this.animate(true);
+  } else if (cursors.right.isDown) {
+    this.face("right");
+    this.animate(true);
+  } else {
+    this.animate(false);
   }
 
   // if (cursors.up.isDown) {
@@ -180,11 +259,12 @@ Player.prototype.update = function() {
 
 module.exports = Player;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 'use strict';
 
 function Boot() {
+
 }
 
 Boot.prototype = {
@@ -223,7 +303,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -251,7 +331,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 'use strict';
 
@@ -305,6 +385,8 @@ Menu.prototype = {
 
   },
   startClick: function() {
+    this.game.socketFunctions = require('../clientSockets/sockets.js');
+    this.game.socketFunctions.startClick(this);
     this.game.state.start('play');
   },
   update: function() {
@@ -316,7 +398,7 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{}],8:[function(require,module,exports){
+},{"../clientSockets/sockets.js":1}],9:[function(require,module,exports){
 
   'use strict';
 
@@ -334,6 +416,11 @@ module.exports = Menu;
   Play.prototype = {
     create: function() {
 
+      this.enemies = {};
+
+      this.game.socketFunctions.createPlay(this);
+
+
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
       // this.body.gravity.y = 500;
@@ -341,6 +428,7 @@ module.exports = Menu;
       this.background = this.game.add.sprite(0, 0, 'background');
 
       //movement for these are the same because of same keystrokes
+
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
       this.player2 = new Player(this.game, 200, 100, 'player', false);
@@ -348,6 +436,7 @@ module.exports = Menu;
       //adding players to stage
       this.game.add.existing(this.player1);
       this.game.add.existing(this.player2);
+
 
       // this.ground = new Ground(this.game, 0, 700, 2000, 112);
       // this.game.add.existing(this.ground);
@@ -373,9 +462,8 @@ module.exports = Menu;
 
       this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,  this.collisionHandler, null, this);
 
+      this.game.socketFunctions.updatePlay(this);
 
-      // this.game.physics.arcade.collide(this.player1, this.platform);
-      // this.game.physics.arcade.collide(this.player2, this.ground);
     },
 
 
@@ -402,7 +490,7 @@ module.exports = Menu;
 
   module.exports = Play;
 
-},{"../prefabs/bullet":2,"../prefabs/ground":3,"../prefabs/player":4}],9:[function(require,module,exports){
+},{"../prefabs/bullet":3,"../prefabs/ground":4,"../prefabs/player":5}],10:[function(require,module,exports){
 
 'use strict';
 function Preload() {
@@ -448,4 +536,4 @@ Preload.prototype = {
 
 module.exports = Preload;
 
-},{}]},{},[1])
+},{}]},{},[2])

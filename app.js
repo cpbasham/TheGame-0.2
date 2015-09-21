@@ -13,15 +13,28 @@ var app = express();
 
 server.listen(4000);
 
+var nextClientId = 0;
+var playerMap = {};
 io.sockets.on("connection", function(socket){
   console.log("socket connected");
+  socket.clientId = nextClientId;
+  nextClientId++;
+  playerMap[socket.clientId] = {x:0, y:0, dir:"right"};
+
+  socket.emit("setup", {clientId: socket.clientId});
+  socket.broadcast.emit("newPlayer", {clientId: socket.clientId});
+
+  // console.log(io.sockets.sockets[0]);
+  // console.log(io.sockets.sockets[1]);
 
   socket.on("play", function(data){
     console.log(data.data)
   });
 
   socket.on("update", function(data){
-    console.log(data.data)
+    playerMap[socket.clientId].x = data.player.position.x;
+    playerMap[socket.clientId].y = data.player.position.y;
+    playerMap[socket.clientId].dir = data.player.direction;
   });
 
   socket.on("click", function(data){
@@ -42,7 +55,9 @@ io.sockets.on("connection", function(socket){
 
 });
 
-
+setInterval(function() {
+  io.sockets.emit("updateAll", playerMap);
+}, 1000 / 30);
 
 
 

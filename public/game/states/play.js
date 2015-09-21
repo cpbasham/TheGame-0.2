@@ -15,41 +15,8 @@
   Play.prototype = {
     create: function() {
       this.enemies = {};
-      var game = this.game;
-      var enemies = this.enemies;
-      var socket = this.game.state.socket;
-      socket.on("setup", function(data) {
-        socket.clientId = data.clientId;
-        for (var key in data.playerMap) {
-          key = parseInt(key);
-          if (key === socket.clientId) {continue;}
-          var enemy = new Player(game, 200, 100, 'player', false);
-          game.add.existing(enemy);
-          enemies[key] = enemy;
-        }
-      });
-      socket.on("newPlayer", function(data) {
-        var enemy = new Player(game, 200, 100, 'player', false);
-        game.add.existing(enemy);
-        enemies[data.clientId] = enemy;
-      });
-      socket.on("updateAll", function(data) {
-        for (var key in data) {
-          key = parseInt(key);
-          if (key === socket.clientId) {continue;}
-          var enemy = enemies[key];
-          var enemyData = data[key];
-          enemy.position.x = enemyData.x;
-          enemy.position.y = enemyData.y;
-          // console.log("About to update direction");
-          enemy.face(enemyData.dir);
-          enemy.frame = enemyData.currentFrame;
-          // enemy.animate(enemyData.isMoving)
-        }
-      });
-      socket.on("playerDisconnected", function(data) {
-        delete enemies[data.clientId].destroy();
-      });
+
+      this.game.socketFunctions.createPlay(this);
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -81,17 +48,7 @@
       this.game.physics.enable(this.player1);
       this.game.physics.arcade.collide(this.player1, this.ground);
 
-      var socket = this.game.state.socket;
-      socket.emit("update", {
-        player: {
-          position: {
-            x: this.player1.position.x,
-            y: this.player1.position.y
-          },
-          direction: this.player1.body.direction,
-          currentFrame: this.player1.frame
-        }
-      });
+      this.game.socketFunctions.updatePlay(this);
 
     },
 

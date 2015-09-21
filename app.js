@@ -10,13 +10,13 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var session      = require('express-session');
 
-var configDB = require('./config/database.js');
-mongoose.connect(configDB.url); // connect to our database
 
 var routes = require('./routes/index')(express, passport);
 
+require('./config/database.js')(mongoose);
 
 var app = express();
+
 
 server = require('http').createServer(app),
 io = require('socket.io').listen(server);

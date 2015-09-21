@@ -51,6 +51,9 @@ Menu.prototype = {
 
   },
   startClick: function() {
+    this.game.state.socket = io.connect();
+    var game = this.game;
+    this.game.state.socket.emit("play", {});
     this.game.state.start('play');
   },
   update: function() {

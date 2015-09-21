@@ -15,6 +15,35 @@
   Play.prototype = {
     create: function() {
       this.enemies = {};
+      var game = this.game;
+      var enemies = this.enemies;
+      var socket = this.game.state.socket;
+      socket.on("setup", function(data) {
+        socket.clientId = data.clientId;
+        for (var key in data.playerMap) {
+          key = parseInt(key);
+          if (key === socket.clientId) {continue;}
+          var enemy = new Player(game, 200, 100, 'player', false);
+          game.add.existing(enemy);
+          enemies[data.clientId] = enemy;
+        }
+      });
+      socket.on("newPlayer", function(data) {
+        var enemy = new Player(game, 200, 100, 'player', false);
+        game.add.existing(enemy);
+        enemies[data.clientId] = enemy;
+      });
+      socket.on("updateAll", function(data) {
+        console.log(data);
+        console.log(enemies);
+        for (var key in data) {
+          key = parseInt(key);
+          if (key === socket.clientId) {continue;}
+          enemies[key].position.x = data[key].x;
+          enemies[key].position.y = data[key].y;
+        }
+      });
+
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
       this.game.physics.arcade.gravity.y = 500;
@@ -37,15 +66,7 @@
       this.game.camera.follow(this.player1);
 
       // cursors = this.game.input.keyboard.createCursorKeys();
-      this.game.state.socket.on("newPlayer", function(data) {
-        var enemy = new Player(this.game, 200, 100, 'player', false);
-        this.game.add.existing(enemy);
-        this.enemies[data[clientId]] = enemy;
-        console.log("ENEMY JOINED");
-      });
-      this.game.state.socket.on("updateAll", function(data) {
-
-      });
+      // debugger;
 
     },
     update: function() {

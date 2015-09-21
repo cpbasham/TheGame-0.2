@@ -7,11 +7,6 @@ function Boot() {
 
 Boot.prototype = {
   preload: function() {
-    this.game.state.socket = io.connect();
-    var socket = this.game.state.socket;
-    socket.on("setup", function(data) {
-      socket.clientId = data.clientId;
-    });
     this.load.image('preloader', 'assets/preloader.gif');
   },
   create: function() {

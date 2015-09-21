@@ -20,15 +20,25 @@ io.sockets.on("connection", function(socket){
   socket.clientId = nextClientId;
   nextClientId++;
   playerMap[socket.clientId] = {x:0, y:0, dir:"right"};
+  // console.log("added", socket.clientId, "to playerMap");
 
-  socket.emit("setup", {clientId: socket.clientId});
-  socket.broadcast.emit("newPlayer", {clientId: socket.clientId});
+  socket.emit("setup",
+    {
+      clientId: socket.clientId,
+      playerMap: playerMap
+    }
+  );
 
   // console.log(io.sockets.sockets[0]);
   // console.log(io.sockets.sockets[1]);
 
+  socket.on("disconnect", function(data) {
+    delete playerMap[socket.clientId];
+  });
+
   socket.on("play", function(data){
-    console.log(data.data)
+    socket.broadcast.emit("newPlayer", {clientId: socket.clientId});
+    // console.log(data.data)
   });
 
   socket.on("update", function(data){
@@ -56,8 +66,9 @@ io.sockets.on("connection", function(socket){
 });
 
 setInterval(function() {
-  io.sockets.emit("updateAll", playerMap);
-}, 1000 / 30);
+  io.emit("updateAll", playerMap);
+// }, 1000 / 30);
+}, 1000 / 1);
 
 
 

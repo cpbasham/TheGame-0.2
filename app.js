@@ -33,6 +33,7 @@ io.sockets.on("connection", function(socket){
   // console.log(io.sockets.sockets[1]);
 
   socket.on("disconnect", function(data) {
+    socket.broadcast.emit("playerDisconnected", {clientId: socket.clientId});
     delete playerMap[socket.clientId];
   });
 
@@ -44,6 +45,8 @@ io.sockets.on("connection", function(socket){
   socket.on("update", function(data){
     playerMap[socket.clientId].x = data.player.position.x;
     playerMap[socket.clientId].y = data.player.position.y;
+    // playerMap[socket.clientId].x = data.player.body.x;
+    // playerMap[socket.clientId].y = data.player.body.y;
     playerMap[socket.clientId].dir = data.player.direction;
   });
 
@@ -67,8 +70,8 @@ io.sockets.on("connection", function(socket){
 
 setInterval(function() {
   io.emit("updateAll", playerMap);
-// }, 1000 / 30);
-}, 1000 / 1);
+}, 1000 / 30);
+// }, 1000 / 1);
 
 
 

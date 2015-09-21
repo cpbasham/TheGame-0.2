@@ -25,23 +25,28 @@
           if (key === socket.clientId) {continue;}
           var enemy = new Player(game, 200, 100, 'player', false);
           game.add.existing(enemy);
-          enemies[data.clientId] = enemy;
+          enemies[key] = enemy;
         }
       });
       socket.on("newPlayer", function(data) {
         var enemy = new Player(game, 200, 100, 'player', false);
+        enemy.position.x = 0;
+        enemy.position.y = 0;
         game.add.existing(enemy);
         enemies[data.clientId] = enemy;
       });
       socket.on("updateAll", function(data) {
-        console.log(data);
-        console.log(enemies);
         for (var key in data) {
           key = parseInt(key);
           if (key === socket.clientId) {continue;}
           enemies[key].position.x = data[key].x;
           enemies[key].position.y = data[key].y;
+          // enemies[key].body.x = data[key].x;
+          // enemies[key].body.y = data[key].y;
         }
+      });
+      socket.on("playerDisconnected", function(data) {
+        delete enemies[data.clientId].destroy();
       });
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);

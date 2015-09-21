@@ -108,8 +108,6 @@ var cursors;
 var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
- this.game.physics.arcade.enableBody(this);
-
   this.anchor.setTo(0.5, 0.5);
 
   this.scale.setTo(0.5, 0.5);
@@ -122,15 +120,19 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   //this.animations.add('jump',[], 10, true);
   //this.animations.add('shoot'[] 10, true);
 
-  this.body.collideWorldBounds = true;
   // this.checkWorldBounds = true;
   // this.outOfBoundsKill = true;
 
+  var game = this.game;
+  var ctx = this;
   if (!controllable) {
     this.update = function() {
       return;
     }
-  };
+  } else {
+    game.physics.arcade.enableBody(ctx);
+    this.body.collideWorldBounds = true;
+  }
 
 };
 
@@ -332,23 +334,28 @@ module.exports = Menu;
           if (key === socket.clientId) {continue;}
           var enemy = new Player(game, 200, 100, 'player', false);
           game.add.existing(enemy);
-          enemies[data.clientId] = enemy;
+          enemies[key] = enemy;
         }
       });
       socket.on("newPlayer", function(data) {
         var enemy = new Player(game, 200, 100, 'player', false);
+        enemy.position.x = 0;
+        enemy.position.y = 0;
         game.add.existing(enemy);
         enemies[data.clientId] = enemy;
       });
       socket.on("updateAll", function(data) {
-        console.log(data);
-        console.log(enemies);
         for (var key in data) {
           key = parseInt(key);
           if (key === socket.clientId) {continue;}
           enemies[key].position.x = data[key].x;
           enemies[key].position.y = data[key].y;
+          // enemies[key].body.x = data[key].x;
+          // enemies[key].body.y = data[key].y;
         }
+      });
+      socket.on("playerDisconnected", function(data) {
+        delete enemies[data.clientId].destroy();
       });
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -358,7 +365,7 @@ module.exports = Menu;
       this.background = this.game.add.sprite(0, 0, 'background');
 
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
+      this.bullet1 = new Bullet(this.game, -100, -100, this.player1);
       this.game.add.existing(this.player1);
       this.game.add.existing(this.bullet1);
 

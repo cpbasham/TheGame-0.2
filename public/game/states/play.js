@@ -30,6 +30,7 @@
       this.game.add.existing(this.player1);
       this.game.add.existing(this.player2);
 
+<<<<<<< HEAD
 
       // this.ground = new Ground(this.game, 0, 700, 2000, 112);
       // this.game.add.existing(this.ground);
@@ -45,10 +46,21 @@
       this.flame = this.game.add.sprite(0, 0, 'kaboom');
       this.flame.scale.setTo(1.5, 1.5);
       this.blow = this.flame.animations.add('blow');
+=======
+      //creating and adding weapon for players
+        this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
+       this.game.add.existing(this.bullet1);
+
+      //camera followingm player one
+      this.game.camera.follow(this.player1);
+
+
+>>>>>>> eda50226b9956333fb12324d1df91f4bef77a74a
 
     },
     update: function() {
 
+<<<<<<< HEAD
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
         this.player1.body.touching.down = true;
       };
@@ -71,6 +83,23 @@
     
     respawn: function(bullet){
         console.log(bullet);
+=======
+      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,  this.collisionHandler, null, this);
+
+      this.game.physics.arcade.collide(this.player1, this.ground);
+      this.game.physics.arcade.collide(this.player1, this.platform);
+      this.game.physics.arcade.collide(this.player2, this.ground);
+    },
+
+
+    collisionHandler: function(bullet, opponent){
+      bullet.kill();
+      opponent.kill()
+      console.log(this.flame.animations.play);
+      this.flame.reset(opponent.body.x, opponent.body.y-100);
+      console.log(this.flame.animations.play);
+      this.flame.animations.play('blow', 30, false, true);
+>>>>>>> eda50226b9956333fb12324d1df91f4bef77a74a
 
         console.log(bullet.reset(this.game.world.randomX, this.game.world.randomY));
     },

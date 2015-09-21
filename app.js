@@ -10,10 +10,11 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var session      = require('express-session');
 
+require('./config/passport.js')(passport)
 
 var routes = require('./routes/index')(express, passport);
 
-require('./config/database.js')(mongoose);
+mongoose.connect(process.env.MONGO_DB_URL)
 
 var app = express();
 

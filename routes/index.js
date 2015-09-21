@@ -7,24 +7,8 @@ module.exports = function(express,passport){
 
   /* GET home page. */
   router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
-  });
 
-  // route for home page
-  router.get('/', function(req, res) {
-      res.render('index.ejs'); // load the index.ejs file
-  });
-
-  // route for login form
-  // route for processing the login form
-  // route for signup form
-  // route for processing the signup form
-
-  // route for showing the profile page
-  router.get('/profile', isLoggedIn, function(req, res) {
-      res.render('profile.ejs', {
-          user : req.user // get the user out of session and pass to template
-      });
+    res.render('index', { title: 'Express', user: req.user });
   });
 
   // route for logging out
@@ -47,7 +31,7 @@ module.exports = function(express,passport){
   // the callback after google has authenticated the user
   router.get('/auth/google/callback',
           passport.authenticate('google', {
-                  successRedirect : '/profile',
+                  successRedirect : '/',
                   failureRedirect : '/'
           }));
 

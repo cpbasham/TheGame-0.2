@@ -1,5 +1,12 @@
 extends layout
 
 block content
-  a(href="/auth/google") Google
+  div(class="header")
+    div(class="authentication")
+      if user
+        span Welcome #{user.google.name}!&nbsp;
+        span
+          a(href="/logout") Logout
+      else
+        a(href="/auth/google") Log in with Google
   #thegame

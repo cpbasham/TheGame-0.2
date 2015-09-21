@@ -1,21 +1,17 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var runningGrunt;
+var runningGrunt = false;
 
 var Player = require("../prefabs/player.js");
 socketFunctions = {};
 
 socketFunctions.startClick = function(ctx) {
-  if (ctx) {
-    runningGrunt = false;
-    ctx.game.state.socket = io.connect();
-    ctx.game.state.socket.emit("play", {});
-  } else {
-    runningGrunt = true;
-  }
+  if (runningGrunt) { return; }
+  ctx.game.state.socket = io.connect();
+  ctx.game.state.socket.emit("play", {});
 }
 
 socketFunctions.createPlay = function(ctx) {
-  if (runningGrunt) { return };
+  if (runningGrunt) { return; };
 
   var game = ctx.game;
   var enemies = ctx.enemies;
@@ -55,7 +51,7 @@ socketFunctions.createPlay = function(ctx) {
 }
 
 socketFunctions.updatePlay = function(ctx) {
-  if (runningGrunt) { return };
+  if (runningGrunt) { return; };
 
   ctx.game.state.socket.emit("update", {
     player: {
@@ -398,7 +394,7 @@ Menu.prototype = {
   },
   startClick: function() {
     this.game.socketFunctions = require('../clientSockets/sockets.js');
-    this.game.socketFunctions.startClick(false);  //TODO false == this
+    this.game.socketFunctions.startClick(this);  //TODO false == this
     this.game.state.start('play');
   },
   update: function() {
@@ -482,8 +478,6 @@ module.exports = Menu;
 
 
     collisionHandler: function(bullet, opponent){
-      debugger;
-
       bullet.kill();
       opponent.kill()
       this.flame.reset(opponent.body.x, opponent.body.y-100);

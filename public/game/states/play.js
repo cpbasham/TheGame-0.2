@@ -30,11 +30,11 @@
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 100, 'player', false);
+      // this.player2 = new Player(this.game, 200, 100, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
+      // this.game.add.existing(this.player2);
 
 
       // this.ground = new Ground(this.game, 0, 700, 2000, 112);
@@ -69,8 +69,6 @@
 
 
     collisionHandler: function(bullet, opponent){
-      debugger;
-
       bullet.kill();
       opponent.kill()
       this.flame.reset(opponent.body.x, opponent.body.y-100);

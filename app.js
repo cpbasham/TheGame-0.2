@@ -29,12 +29,10 @@ app.use(app.router);
 
 // configure routes
 var routes = require('./routes/index');
-var login = require('./routes/login');
-var register = require('./routes/register');
+var login = require('./routes/passport')
 
 app.use('/', routes);
 app.use('/login', login);
-app.use('register', register);
 
 
 

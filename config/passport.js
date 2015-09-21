@@ -1,34 +1,45 @@
-var mongoose = require('mongoose'),
-    LocalStrategy = require('passport-local').Strategy
-    User = mongoose.model('User');
+var dotenv = require('dotenv')
+var FacebookStrategy = require('passport-facebook').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
-module.exports = function(app, passport){
+var User = require('../models/user');
+var configAuth = require('./auth');
 
-  // serialize sessions
+dotenv.load();
+
+module.exports = function(passport) {
+
+  // used to serialize the user for the session
   passport.serializeUser(function(user, done) {
-      done(null, user.id);
+    done(null, user.id);
   });
 
+  // used to deserialize the user
   passport.deserializeUser(function(id, done) {
-      User.findById( id, function (err, user) {
-          done(err, user)
-      });
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
   });
 
-  // use local strategy
-  passport.use(new LocalStrategy(
-    function(username, password, done) {
-      User.findOne({ username: username }, function(err, user) {
-        if (err) { return done(err); }
-        if (!user) {
-          return done(null, false, { message: 'Incorrect username.' });
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-        return done(null, user);
-      });
-    }
-  ));
+  // code for login (use('local-login', new LocalStategy))
+  // code for signup (use('local-signup', new LocalStategy))
+  // code for facebook (use('facebook', new FacebookStrategy))
+  // code for twitter (use('twitter', new TwitterStrategy))
 
-}
+  // =========================================================================
+  // GOOGLE ==================================================================
+  // =========================================================================
+  passport.use(new GoogleStrategy({
+    clientID:     process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:4000/auth/google/callback",
+    passReqToCallback   : true
+  },
+  function(request, accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  }
+  ));
+};
+

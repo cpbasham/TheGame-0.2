@@ -4,11 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('config');
 
 
 var app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server);
+    passport = require('passport');
+    mongoose = require('mongoose');
+
+// configure database
+mongoose.connect('mongodb://localhost/thegame')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,19 +28,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // cofngure session,passport for user authentication
-app.use(express.session({ secret: process.env('SESSION_SECRET') }));
+require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(app.router);
+// app.use(app.router);
 
 // configure routes
-var routes = require('./routes/index');
-var login = require('./routes/passport')
-
+var routes = require('./routes');
 app.use('/', routes);
-app.use('/login', login);
-
-
 
 
 

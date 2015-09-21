@@ -17,8 +17,7 @@
 
       this.enemies = {};
 
-      //TODO
-      // this.game.socketFunctions.createPlay(this);
+      this.game.socketFunctions.createPlay(this);
 
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -63,8 +62,8 @@
       this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
       this.collisionHandler, null, this);
 
-      //TODO
-      // this.game.socketFunctions.updatePlay(this);
+
+      this.game.socketFunctions.updatePlay(this);
 
     },
 

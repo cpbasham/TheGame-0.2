@@ -430,8 +430,7 @@ module.exports = Menu;
 
       this.enemies = {};
 
-      //TODO
-      // this.game.socketFunctions.createPlay(this);
+      this.game.socketFunctions.createPlay(this);
 
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -476,8 +475,8 @@ module.exports = Menu;
       this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
       this.collisionHandler, null, this);
 
-      //TODO
-      // this.game.socketFunctions.updatePlay(this);
+
+      this.game.socketFunctions.updatePlay(this);
 
     },
 

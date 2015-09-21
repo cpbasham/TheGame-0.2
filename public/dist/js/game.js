@@ -10,7 +10,7 @@ window.onload = function () {
   game.state.add('menu', require('./states/menu'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
-
+  
 
   game.state.start('boot');
 };
@@ -137,8 +137,6 @@ var Player = function(game, x, y, playerName, controllable, frame) {
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
-
-
 
 Player.prototype.update = function() {
   this.game.physics.arcade.gravity.y = 500;
@@ -351,8 +349,6 @@ module.exports = Menu;
       this.game.add.existing(this.player1);
       this.game.add.existing(this.player2);
 
-<<<<<<< HEAD
-
       // this.ground = new Ground(this.game, 0, 700, 2000, 112);
       // this.game.add.existing(this.ground);
 
@@ -361,12 +357,6 @@ module.exports = Menu;
       this.game.add.existing(this.bullet1);
 
 
-=======
-      //creating and adding weapon for players
-        this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
-       this.game.add.existing(this.bullet1);
-
->>>>>>> eda50226b9956333fb12324d1df91f4bef77a74a
       //camera followingm player one
       this.game.camera.follow(this.player1);
 
@@ -377,26 +367,9 @@ module.exports = Menu;
     },
     update: function() {
 
-<<<<<<< HEAD
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
         this.player1.body.touching.down = true;
       };
-=======
-      this.game.physics.arcade.overlap(this.player2,  this.bullet1.bullets, this.collisionHandler, null, this);
-
-      this.game.physics.arcade.collide(this.player1, this.ground);
-      this.game.physics.arcade.collide(this.player1, this.platform);
-      this.game.physics.arcade.collide(this.player2, this.ground);
-    },
-
-
-    collisionHandler: function(opponent, bullet){
-      bullet.kill();
-      opponent.kill()
-      this.flame.reset(opponent.body.x, opponent.body.y-100);
-      this.flame.animations.play('blow', 30, false, true);
-      this.respawn(opponent);
->>>>>>> eda50226b9956333fb12324d1df91f4bef77a74a
 
       this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,  this.collisionHandler, null, this);
 
@@ -412,12 +385,7 @@ module.exports = Menu;
       this.flame.reset(opponent.body.x, opponent.body.y-100);
       this.flame.animations.play('blow', 30, false, true);
       this.respawn(opponent);
-    },
-    
-    respawn: function(bullet){
-        console.log(bullet);
 
-        console.log(bullet.reset(this.game.world.randomX, this.game.world.randomY));
     },
 
     respawn: function(bullet){
@@ -425,6 +393,7 @@ module.exports = Menu;
 
         console.log(bullet.reset(this.game.world.randomX, this.game.world.randomY));
     },
+
 
     clickListener: function() {
       this.game.state.start('gameover');

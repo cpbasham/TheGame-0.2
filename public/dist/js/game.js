@@ -1,24 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
-var socket = io.connect();
+
 //global variables
 window.onload = function () {
   var game = new Phaser.Game(800, 600, Phaser.AUTO, 'thegame');
-
-
-  socket.emit("play", {data:"this is data"});
-  socket.emit("update", {data:"update data"});
-
   // Game States
   game.state.add('boot', require('./states/boot'));
   game.state.add('gameover', require('./states/gameover'));
   game.state.add('menu', require('./states/menu'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
-
+  
 
   game.state.start('boot');
 };
+
 },{"./states/boot":5,"./states/gameover":6,"./states/menu":7,"./states/play":8,"./states/preload":9}],2:[function(require,module,exports){
 'use strict';
 
@@ -63,9 +59,6 @@ Bullet.prototype.update = function(){
 
     if (this.game.input.activePointer.isDown)
     {
-      var socket = io.connect();
-      socket.emit("bullet", {data:"bullet triggered"});
-
       if (this.game.time.now > nextFire && this.bullets.countDead() > 0)
        {
           nextFire = this.game.time.now + fireRate;
@@ -146,7 +139,6 @@ Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
   cursors = this.game.input.keyboard.createCursorKeys();
-  var socket = io.connect();
 
   this.body.velocity.x = 0;
 
@@ -155,17 +147,10 @@ Player.prototype.update = function() {
     this.anchor.setTo(0.5, 0);
     this.scale.x = -0.5;
     this.animations.play('left');
-
-    socket.emit("left", {data:"moved to the fucking left"})
-
   } else if (cursors.right.isDown) {
     this.scale.x = 0.5;
     this.body.velocity.x = 750;
     this.animations.play('right');
-
-    socket.emit("right", {data:"moved to the fucking right"})
-
-
   } else {
     this.animations.stop();
     this.frame = 0;
@@ -245,7 +230,6 @@ GameOver.prototype = {
   update: function () {
     if(this.game.input.activePointer.justPressed()) {
       this.game.state.start('play');
-
     }
   }
 };
@@ -306,9 +290,6 @@ Menu.prototype = {
   },
   startClick: function() {
     this.game.state.start('play');
-      var socket = io.connect();
-     socket.emit("click", {data:"click data"});
-
   },
   update: function() {
     // if(this.game.input.activePointer.justPressed()) {
@@ -330,7 +311,10 @@ module.exports = Menu;
   var cursors;
 
 
+
+
   function Play() {}
+
   Play.prototype = {
     create: function() {
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -338,12 +322,6 @@ module.exports = Menu;
       this.game.physics.arcade.gravity.y = 500;
 
       this.background = this.game.add.sprite(0, 0, 'background');
-
-      this.player = new Player(this.game, 0, 2000);
-
-      this.bullet = new Bullet(this.game, this.player.x, this.player.y, this.player);
-      this.game.add.existing(this.player);
-
 
       this.player1 = new Player(this.game, 100, 100, 'player', true);
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
@@ -366,7 +344,6 @@ module.exports = Menu;
     update: function() {
 
       this.game.physics.enable(this.player1);
-
       this.game.physics.arcade.collide(this.player1, this.ground);
 
     },

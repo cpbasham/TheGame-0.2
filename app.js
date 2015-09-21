@@ -19,7 +19,7 @@ io.sockets.on("connection", function(socket){
   console.log("socket connected");
   socket.clientId = nextClientId;
   nextClientId++;
-  playerMap[socket.clientId] = {x:0, y:0, dir:"right"};
+  playerMap[socket.clientId] = {x:0, y:0, dir:"right", isMoving:false};
   // console.log("added", socket.clientId, "to playerMap");
 
   socket.emit("setup",
@@ -42,12 +42,12 @@ io.sockets.on("connection", function(socket){
     // console.log(data.data)
   });
 
-  socket.on("update", function(data){
-    playerMap[socket.clientId].x = data.player.position.x;
-    playerMap[socket.clientId].y = data.player.position.y;
-    // playerMap[socket.clientId].x = data.player.body.x;
-    // playerMap[socket.clientId].y = data.player.body.y;
-    playerMap[socket.clientId].dir = data.player.direction;
+  socket.on("update", function(clientData){
+    var serverData  = playerMap[socket.clientId];
+    serverData.x    = clientData.player.position.x;
+    serverData.y    = clientData.player.position.y;
+    serverData.dir  = clientData.player.direction;
+    serverData.currentFrame = clientData.player.currentFrame;
   });
 
   socket.on("click", function(data){

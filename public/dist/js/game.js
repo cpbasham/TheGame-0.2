@@ -109,7 +109,6 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
   this.anchor.setTo(0.5, 0.5);
-
   this.scale.setTo(0.5, 0.5);
 
   this.animations.add('run');
@@ -120,42 +119,60 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   //this.animations.add('jump',[], 10, true);
   //this.animations.add('shoot'[] 10, true);
 
+  this.game.physics.arcade.enableBody(this);
+  this.body.collideWorldBounds = true;
+  this.face("right");
+  this.animate(false);
+
   // this.checkWorldBounds = true;
   // this.outOfBoundsKill = true;
 
   var game = this.game;
   var ctx = this;
   if (!controllable) {
-    this.update = function() {
-      return;
-    }
+    this.update = function() {}
   } else {
-    game.physics.arcade.enableBody(ctx);
-    this.body.collideWorldBounds = true;
+    cursors = this.game.input.keyboard.createCursorKeys();
   }
 
 };
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
+Player.prototype.face = function(direction) {
+  if (direction === "left") {
+    this.body.direction = "left";
+    this.scale.x = -0.5;
+  } else if (direction === "right") {
+    this.body.direction = "right";
+    this.scale.x = 0.5;
+  }
+}
+Player.prototype.animate = function(moving) {
+  if (moving) {
+    this.body.moving = true;
+    var velocity = (this.body.direction === "left" ? -750 : 750);
+    this.body.velocity.x = velocity;
+    this.animations.play(this.body.direction);
+  } else {
+    this.body.moving = false;
+    this.animations.stop();
+    // this.frame = 0;
+  }
+
+}
 
 Player.prototype.update = function() {
-  cursors = this.game.input.keyboard.createCursorKeys();
 
   this.body.velocity.x = 0;
-
   if (cursors.left.isDown) {
-    this.body.velocity.x = -750;
-    this.anchor.setTo(0.5, 0);
-    this.scale.x = -0.5;
-    this.animations.play('left');
+    this.face("left");
+    this.animate(true);
   } else if (cursors.right.isDown) {
-    this.scale.x = 0.5;
-    this.body.velocity.x = 750;
-    this.animations.play('right');
+    this.face("right");
+    this.animate(true);
   } else {
-    this.animations.stop();
-    this.frame = 0;
+    this.animate(false);
   }
   if (cursors.up.isDown && this.body.touching.down){
     console.log(this.body.touching.down)
@@ -339,8 +356,6 @@ module.exports = Menu;
       });
       socket.on("newPlayer", function(data) {
         var enemy = new Player(game, 200, 100, 'player', false);
-        enemy.position.x = 0;
-        enemy.position.y = 0;
         game.add.existing(enemy);
         enemies[data.clientId] = enemy;
       });
@@ -348,10 +363,14 @@ module.exports = Menu;
         for (var key in data) {
           key = parseInt(key);
           if (key === socket.clientId) {continue;}
-          enemies[key].position.x = data[key].x;
-          enemies[key].position.y = data[key].y;
-          // enemies[key].body.x = data[key].x;
-          // enemies[key].body.y = data[key].y;
+          var enemy = enemies[key];
+          var enemyData = data[key];
+          enemy.position.x = enemyData.x;
+          enemy.position.y = enemyData.y;
+          // console.log("About to update direction");
+          enemy.face(enemyData.dir);
+          enemy.frame = enemyData.currentFrame;
+          // enemy.animate(enemyData.isMoving)
         }
       });
       socket.on("playerDisconnected", function(data) {
@@ -365,7 +384,7 @@ module.exports = Menu;
       this.background = this.game.add.sprite(0, 0, 'background');
 
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.bullet1 = new Bullet(this.game, -100, -100, this.player1);
+      this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.player1);
       this.game.add.existing(this.bullet1);
 
@@ -389,20 +408,16 @@ module.exports = Menu;
       this.game.physics.arcade.collide(this.player1, this.ground);
 
       var socket = this.game.state.socket;
-      var dir = this.player1.scale.x < 0 ? "left" : "right";
-      socket.emit("update",
-        {
-        player:
-          {
-          position:
-            {
+      socket.emit("update", {
+        player: {
+          position: {
             x: this.player1.position.x,
             y: this.player1.position.y
-            },
-          direction: dir
-          }
+          },
+          direction: this.player1.body.direction,
+          currentFrame: this.player1.frame
         }
-      );
+      });
 
     },
 

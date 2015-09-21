@@ -30,8 +30,6 @@
       });
       socket.on("newPlayer", function(data) {
         var enemy = new Player(game, 200, 100, 'player', false);
-        enemy.position.x = 0;
-        enemy.position.y = 0;
         game.add.existing(enemy);
         enemies[data.clientId] = enemy;
       });
@@ -39,10 +37,14 @@
         for (var key in data) {
           key = parseInt(key);
           if (key === socket.clientId) {continue;}
-          enemies[key].position.x = data[key].x;
-          enemies[key].position.y = data[key].y;
-          // enemies[key].body.x = data[key].x;
-          // enemies[key].body.y = data[key].y;
+          var enemy = enemies[key];
+          var enemyData = data[key];
+          enemy.position.x = enemyData.x;
+          enemy.position.y = enemyData.y;
+          // console.log("About to update direction");
+          enemy.face(enemyData.dir);
+          enemy.frame = enemyData.currentFrame;
+          // enemy.animate(enemyData.isMoving)
         }
       });
       socket.on("playerDisconnected", function(data) {
@@ -80,20 +82,16 @@
       this.game.physics.arcade.collide(this.player1, this.ground);
 
       var socket = this.game.state.socket;
-      var dir = this.player1.scale.x < 0 ? "left" : "right";
-      socket.emit("update",
-        {
-        player:
-          {
-          position:
-            {
+      socket.emit("update", {
+        player: {
+          position: {
             x: this.player1.position.x,
             y: this.player1.position.y
-            },
-          direction: dir
-          }
+          },
+          direction: this.player1.body.direction,
+          currentFrame: this.player1.frame
         }
-      );
+      });
 
     },
 

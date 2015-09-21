@@ -481,8 +481,7 @@ module.exports = Menu;
     },
 
 
-    collisionHandler: function(bullet, opponent){
-      debugger;
+    collisionHandler: function(opponent, bullet){
 
       bullet.kill();
       opponent.kill()
@@ -493,10 +492,11 @@ module.exports = Menu;
     },
 
     respawn: function(opponent){
-        console.log(opponent);
+
         // opponent.alive();
         // debugger;
-        console.log(opponent.reset(this.game.world.randomX, this.game.world.randomY));
+
+        opponent.reset(this.game.world.randomX, this.game.world.randomY);
     },
 
 

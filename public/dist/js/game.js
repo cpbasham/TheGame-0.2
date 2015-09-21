@@ -1,13 +1,22 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var runningGrunt;
+
 var Player = require("../prefabs/player.js");
 socketFunctions = {};
 
 socketFunctions.startClick = function(ctx) {
-  ctx.game.state.socket = io.connect();
-  ctx.game.state.socket.emit("play", {});
+  if (ctx) {
+    runningGrunt = false;
+    ctx.game.state.socket = io.connect();
+    ctx.game.state.socket.emit("play", {});
+  } else {
+    runningGrunt = true;
+  }
 }
 
 socketFunctions.createPlay = function(ctx) {
+  if (runningGrunt) { return };
+
   var game = ctx.game;
   var enemies = ctx.enemies;
   var socket = ctx.game.state.socket;
@@ -46,6 +55,8 @@ socketFunctions.createPlay = function(ctx) {
 }
 
 socketFunctions.updatePlay = function(ctx) {
+  if (runningGrunt) { return };
+
   ctx.game.state.socket.emit("update", {
     player: {
       position: {
@@ -59,6 +70,7 @@ socketFunctions.updatePlay = function(ctx) {
 }
 
 module.exports = socketFunctions
+
 },{"../prefabs/player.js":5}],2:[function(require,module,exports){
 'use strict';
 
@@ -386,7 +398,7 @@ Menu.prototype = {
   },
   startClick: function() {
     this.game.socketFunctions = require('../clientSockets/sockets.js');
-    this.game.socketFunctions.startClick(this);
+    this.game.socketFunctions.startClick(false);  //TODO false == this
     this.game.state.start('play');
   },
   update: function() {
@@ -418,7 +430,8 @@ module.exports = Menu;
 
       this.enemies = {};
 
-      this.game.socketFunctions.createPlay(this);
+      //TODO
+      // this.game.socketFunctions.createPlay(this);
 
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -460,14 +473,18 @@ module.exports = Menu;
         this.player1.body.touching.down = true;
       };
 
-      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,  this.collisionHandler, null, this);
+      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
+      this.collisionHandler, null, this);
 
-      this.game.socketFunctions.updatePlay(this);
+      //TODO
+      // this.game.socketFunctions.updatePlay(this);
 
     },
 
 
-    collisionHandler: function(opponent, bullet){
+    collisionHandler: function(bullet, opponent){
+      debugger;
+
       bullet.kill();
       opponent.kill()
       this.flame.reset(opponent.body.x, opponent.body.y-100);
@@ -476,10 +493,11 @@ module.exports = Menu;
 
     },
 
-    respawn: function(bullet){
-        console.log(bullet);
-
-        console.log(bullet.reset(this.game.world.randomX, this.game.world.randomY));
+    respawn: function(opponent){
+        console.log(opponent);
+        // opponent.alive();
+        // debugger;
+        console.log(opponent.reset(this.game.world.randomX, this.game.world.randomY));
     },
 
 

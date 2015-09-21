@@ -17,7 +17,8 @@
 
       this.enemies = {};
 
-      this.game.socketFunctions.createPlay(this);
+      //TODO
+      // this.game.socketFunctions.createPlay(this);
 
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -59,14 +60,18 @@
         this.player1.body.touching.down = true;
       };
 
-      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,  this.collisionHandler, null, this);
+      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
+      this.collisionHandler, null, this);
 
-      this.game.socketFunctions.updatePlay(this);
+      //TODO
+      // this.game.socketFunctions.updatePlay(this);
 
     },
 
 
-    collisionHandler: function(opponent, bullet){
+    collisionHandler: function(bullet, opponent){
+      debugger;
+
       bullet.kill();
       opponent.kill()
       this.flame.reset(opponent.body.x, opponent.body.y-100);
@@ -75,10 +80,11 @@
 
     },
 
-    respawn: function(bullet){
-        console.log(bullet);
-
-        console.log(bullet.reset(this.game.world.randomX, this.game.world.randomY));
+    respawn: function(opponent){
+        console.log(opponent);
+        // opponent.alive();
+        // debugger;
+        console.log(opponent.reset(this.game.world.randomX, this.game.world.randomY));
     },
 
 

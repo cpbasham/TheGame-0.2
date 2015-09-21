@@ -1,12 +1,21 @@
+var runningGrunt;
+
 var Player = require("../prefabs/player.js");
 socketFunctions = {};
 
 socketFunctions.startClick = function(ctx) {
-  ctx.game.state.socket = io.connect();
-  ctx.game.state.socket.emit("play", {});
+  if (ctx) {
+    runningGrunt = false;
+    ctx.game.state.socket = io.connect();
+    ctx.game.state.socket.emit("play", {});
+  } else {
+    runningGrunt = true;
+  }
 }
 
 socketFunctions.createPlay = function(ctx) {
+  if (runningGrunt) { return };
+
   var game = ctx.game;
   var enemies = ctx.enemies;
   var socket = ctx.game.state.socket;
@@ -45,6 +54,8 @@ socketFunctions.createPlay = function(ctx) {
 }
 
 socketFunctions.updatePlay = function(ctx) {
+  if (runningGrunt) { return };
+
   ctx.game.state.socket.emit("update", {
     player: {
       position: {

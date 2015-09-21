@@ -48,23 +48,23 @@ module.exports = function (grunt) {
         }
       }
     },
-    // open: {
-    //   server: {
-    //     path: 'http://localhost:3000'
-    //   }
-    // },
-    // copy: {
-    //   dist: {
-    //     files: [
-    //       // includes files within path and its sub-directories
-    //       { expand: true, src: ['assets/**'], dest: 'public/dist/' },
-    //       { expand: true, flatten: true, src: ['public/game/plugins/*.js'], dest: 'public/dist/js/plugins/' },
-    //       { expand: true, flatten: true, src: ['bower_components/**/build/*.js'], dest: 'public/dist/js/' },
-    //       { expand: true, src: ['public/css/**'], dest: 'public/dist/' },
-    //       { expand: true, src: ['public/dist/index.html'], dest: 'public/dist/' }
-    //     ]
-    //   }
-    // },
+    open: {
+      server: {
+        path: 'http://localhost:3000'
+      }
+    },
+    copy: {
+      dist: {
+        files: [
+          // includes files within path and its sub-directories
+          { expand: true, src: ['assets/**'], dest: 'public/dist/' },
+          { expand: true, flatten: true, src: ['public/game/plugins/*.js'], dest: 'public/dist/js/plugins/' },
+          { expand: true, flatten: true, src: ['bower_components/**/build/*.js'], dest: 'public/dist/js/' },
+          { expand: true, src: ['public/css/**'], dest: 'public/dist/' },
+          { expand: true, src: ['public/dist/index.html'], dest: 'public/dist/' }
+        ]
+      }
+    },
     browserify: {
       build: {
         src: ['public/game/main.js'],

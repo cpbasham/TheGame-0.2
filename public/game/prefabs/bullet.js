@@ -26,8 +26,6 @@ var Bullet = function(game, x, y, player) {
     player.body.allowRotation = false;
 
 
-
-
     this.body.collideWorldBounds = true;
 };
 

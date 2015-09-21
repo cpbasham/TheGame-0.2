@@ -5,7 +5,10 @@ var cursors;
 var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
- this.game.physics.arcade.enableBody(this);
+  // this.game.physics.enable(this);
+  // this.game.physics.arcade.gravity.y = 500;
+
+  this.game.physics.arcade.enableBody(this);
 
   this.anchor.setTo(0.5, 0.5);
 
@@ -35,7 +38,9 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+  this.game.physics.arcade.gravity.y = 500;
   cursors = this.game.input.keyboard.createCursorKeys();
+
 
   this.body.velocity.x = 0;
 
@@ -52,10 +57,23 @@ Player.prototype.update = function() {
     this.animations.stop();
     this.frame = 0;
   }
-  if (cursors.up.isDown && this.body.touching.down){
-    console.log(this.body.touching.down)
-    this.body.velocity.y = -550;
+
+  // if (cursors.up.isDown) {
+  //   console.log('pressing up');
+  //   this.body.velocity.x = 100;
+  // }
+
+
+  if (cursors.up.isDown && this.body.wasTouching.down) {
+    this.body.velocity.y -= 100;
+
+    // debugger;
+    console.log("yolo");
   }
+
+
+
+  // console.log(cursors);
 
 };
 

@@ -44,8 +44,6 @@ var Bullet = function(game, x, y, player) {
     player.body.allowRotation = false;
 
 
-
-
     this.body.collideWorldBounds = true;
 };
 
@@ -108,7 +106,10 @@ var cursors;
 var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
- this.game.physics.arcade.enableBody(this);
+  // this.game.physics.enable(this);
+  // this.game.physics.arcade.gravity.y = 500;
+
+  this.game.physics.arcade.enableBody(this);
 
   this.anchor.setTo(0.5, 0.5);
 
@@ -138,7 +139,9 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+  this.game.physics.arcade.gravity.y = 500;
   cursors = this.game.input.keyboard.createCursorKeys();
+
 
   this.body.velocity.x = 0;
 
@@ -155,10 +158,23 @@ Player.prototype.update = function() {
     this.animations.stop();
     this.frame = 0;
   }
-  if (cursors.up.isDown && this.body.touching.down){
-    console.log(this.body.touching.down)
-    this.body.velocity.y = -550;
+
+  // if (cursors.up.isDown) {
+  //   console.log('pressing up');
+  //   this.body.velocity.x = 100;
+  // }
+
+
+  if (cursors.up.isDown && this.body.wasTouching.down) {
+    this.body.velocity.y -= 100;
+
+    // debugger;
+    console.log("yolo");
   }
+
+
+
+  // console.log(cursors);
 
 };
 
@@ -317,35 +333,65 @@ module.exports = Menu;
 
   Play.prototype = {
     create: function() {
+
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-      this.game.physics.arcade.gravity.y = 500;
+      // this.body.gravity.y = 500;
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
-      this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
-      this.game.add.existing(this.player1);
-      this.game.add.existing(this.bullet1);
-
       //movement for these are the same because of same keystrokes
+      //creating players
+      this.player1 = new Player(this.game, 100, 100, 'player', true);
       this.player2 = new Player(this.game, 200, 100, 'player', false);
 
+      //adding players to stage
+      this.game.add.existing(this.player1);
       this.game.add.existing(this.player2);
+
 
       // this.ground = new Ground(this.game, 0, 700, 2000, 112);
       // this.game.add.existing(this.ground);
 
+      //creating and adding weapon for players
+      this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
+      this.game.add.existing(this.bullet1);
+
+
+      //camera followingm player one
       this.game.camera.follow(this.player1);
 
-      // cursors = this.game.input.keyboard.createCursorKeys();
+      this.flame = this.game.add.sprite(0, 0, 'kaboom');
+      this.flame.scale.setTo(1.5, 1.5);
+      this.blow = this.flame.animations.add('blow');
 
     },
     update: function() {
 
-      this.game.physics.enable(this.player1);
-      this.game.physics.arcade.collide(this.player1, this.ground);
+      if (this.game.physics.arcade.collide(this.player1, this.ground)) {
+        this.player1.body.touching.down = true;
+      };
 
+      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,  this.collisionHandler, null, this);
+
+
+      // this.game.physics.arcade.collide(this.player1, this.platform);
+      // this.game.physics.arcade.collide(this.player2, this.ground);
+    },
+
+
+    collisionHandler: function(opponent, bullet){
+      bullet.kill();
+      opponent.kill()
+      this.flame.reset(opponent.body.x, opponent.body.y-100);
+      this.flame.animations.play('blow', 30, false, true);
+      this.respawn(opponent);
+    },
+    
+    respawn: function(bullet){
+        console.log(bullet);
+
+        console.log(bullet.reset(this.game.world.randomX, this.game.world.randomY));
     },
 
     clickListener: function() {
@@ -376,8 +422,9 @@ Preload.prototype = {
     this.load.image('startButton', 'assets/images/start-button.png');
     this.load.image('background', 'assets/images/background.png');
     this.load.image('ground', 'assets/images/ground.png');
+    this.load.spritesheet('kaboom', '../assets/images/explode.png', 128, 128);
+    this.load.spritesheet('explosion', '../assets/images/explosion1.png', 200, 141, 11);
     this.load.spritesheet('bullet', 'assets/images/bird.png', 34, 24, 1);
-
     this.load.spritesheet('player', 'assets/images/running100x141.png', 100, 141, 6);
 
     // this.load.tilemap('level1', 'assets/tilemaps/testmap.json', null, Phaser.Tilemap.TILED_JSON);

@@ -54,16 +54,10 @@ socketFunctions.createPlay = function(ctx) {
 
       for (var i=0; i<enemyData.bullets.length; i++) {
         bulletData = enemyData.bullets[i];
-        // debugger;
-        // console.log(bulletData);
         var bullet = new Bullet(game, bulletData.x, bulletData.y, enemy);
-        // bullet.reset(bulletData.x, bulletData.y);
         game.add.existing(bullet);
-        // bullet.enableBody = true;
-        // bullet.physicsBodyType = Phaser.Physics.ARCADE;
         enemyBullets.push(bullet);
       }
-      // console.log("ENEMY BULLET:", enemyBullets[0]);
     }
   });
   socket.on("playerDisconnected", function(data) {

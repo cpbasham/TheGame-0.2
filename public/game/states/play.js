@@ -15,7 +15,7 @@
   Play.prototype = {
     create: function() {
 
-      this.enemies = {};
+      this.enemies = {players: {}, bullets: {}};
 
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);

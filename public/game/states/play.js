@@ -69,17 +69,11 @@
 
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
         this.player1.setCollision(true);
-      } else {
-        this.player1.setCollision(false);
-      };
-
-      if (this.game.physics.arcade.collide(this.player1, this.platforms)) {
+      } else if (this.game.physics.arcade.collide(this.player1, this.platforms)) {
         this.player1.setCollision(true);
       } else {
         this.player1.setCollision(false);
       };
-
-      // console.log(this.player1.body)
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);

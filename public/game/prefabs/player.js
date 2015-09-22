@@ -94,8 +94,9 @@ Player.prototype.update = function() {
   }
 
   if (cursors.up.isDown && this.yolo) {
+    // debugger;
     this.body.position.y -= 1;
-    this.body.velocity.y -= 450;
+    this.body.velocity.y = -450;
   }
 
 };

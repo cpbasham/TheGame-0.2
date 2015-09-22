@@ -171,17 +171,22 @@ Bullet.prototype.update = function(){
 },{}],4:[function(require,module,exports){
 'use strict';
 
-var platforms;
+// var platforms;
 
 var Ground = function(game, x, y, width, height) {
-  Phaser.TileSprite.call(this, game, x, y, 'ground');
+  Phaser.TileSprite.call(this, game, x, y, 'floor');
 
-    //;
+  this.game.physics.arcade.enableBody(this);
+  this.physicsType = Phaser.SPRITE;
 
-   this.platforms = this.game.add.group();
-   this.platforms.enableBody = true;
-   this.game.physics.arcade.enable(this)
-   this.platforms.createMultiple(10, 'ground');
+  this.body.immovable = true;
+  this.body.moves = false;
+  // debugger;
+  // this.platforms = this.game.add.group();
+  // this.platforms.enableBody = true;
+  this.game.physics.arcade.enable(this)
+  // this.platforms.createMultiple(10, 'floor');
+
   //  for (var i = 0; i < this.platforms.children.length; i++) {
   //    this.platforms.children[i].body.allowGravity = false;
   //    this.platforms.children[i].body.immovable = true;
@@ -218,8 +223,11 @@ var cursors;
 var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
-  // this.game.physics.enable(this);
-  // this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.enable(this, Phaser.Physics.ARCADE);
+  this.game.add.existing(this);
+
+
+  this.game.allowGravity;
 
   this.anchor.setTo(0.5, 0.5);
   this.scale.setTo(0.5, 0.5);
@@ -278,7 +286,17 @@ Player.prototype.animate = function(moving) {
 
 }
 
+Player.prototype.setCollision = function(state) {
+  return this.yolo = state;
+}
+
 Player.prototype.update = function() {
+
+  // console.log('hello, inside UPDATE function')
+  // console.log(this);
+  // console.log(this.body);
+
+  // console.log('i am in update for PLAYER')
 
   this.game.physics.arcade.enable(this);
 
@@ -299,16 +317,10 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // console.log(this.body.blocked.down);
-  console.log(this.body.wasTouching.down)
-
-
-
-  if (cursors.up.isDown && (this.body.touching.down || this.body.wasTouching.down || this.body.blocked.down)) {
-    this.body.velocity.y = -550;
-  };
-
-  debugger;
+  if (cursors.up.isDown && this.yolo) {
+    this.body.position.y -= 1;
+    this.body.velocity.y -= 450;
+  }
 
 };
 
@@ -474,19 +486,15 @@ module.exports = Menu;
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
+      console.log(this.game)
+
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 1400, 'player', false);
+      // this.player2 = new Player(this.game, 200, 1400, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
-
-
-      this.ground = new Ground(this.game, 0, 1400, 4000, 112);
-      this.game.add.existing(this.ground);
-      this.ground.body.immovable = true;
-      this.ground.body.moves = false;
+      // this.game.add.existing(this.player2);
 
       // this.ground.setCollisionBetween(2, 12);
 
@@ -501,8 +509,11 @@ module.exports = Menu;
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
 
+      //ground
+      this.ground = new Ground(this.game, 0, 1322, 300, 213);
+      this.game.add.existing(this.ground);
 
-      //camera followingm player one
+      //camera following player one
       this.game.camera.follow(this.player1);
 
       this.flame = this.game.add.sprite(0, 0, 'kaboom');
@@ -513,19 +524,24 @@ module.exports = Menu;
     },
     update: function() {
 
-      // if (this.game.physics.arcade.collide(this.player1, this.ground)) {
-      //   this.player1.body.touching.down = true;
-      // };
+      if (this.game.physics.arcade.collide(this.player1, this.ground)) {
+        this.player1.setCollision(true);
+        // this.player1.body.touching.down = true;
+      } else {
+        this.player1.setCollision(false);
+      };
+
+      // console.log(this.player1.body)
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
 
+
+
+
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       this.game.physics.arcade.overlap(this.game.bullets, this.player2,
       this.collisionHandler, null, this);
-
-
-
 
       this.game.socketFunctions.updatePlay(this);
     },
@@ -573,6 +589,8 @@ Preload.prototype = {
     this.load.image('startButton', 'assets/images/start-button.png');
     this.load.image('background', 'assets/images/background.png');
     this.load.image('ground', 'assets/images/ground.png');
+    this.load.image('ground1', 'assets/images/ground1.png');  //tried to crop out clear space
+    this.load.image('floor', 'assets/images/floor.png');
     this.load.spritesheet('kaboom', '../assets/images/explode.png', 128, 128);
     this.load.spritesheet('explosion', '../assets/images/explosion1.png', 200, 141, 11);
     this.load.spritesheet('bullet', 'assets/images/bird.png', 34, 24, 1);

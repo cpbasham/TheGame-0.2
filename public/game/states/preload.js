@@ -18,6 +18,8 @@ Preload.prototype = {
     this.load.image('startButton', 'assets/images/start-button.png');
     this.load.image('background', 'assets/images/background.png');
     this.load.image('ground', 'assets/images/ground.png');
+    this.load.image('ground1', 'assets/images/ground1.png');  //tried to crop out clear space
+    this.load.image('floor', 'assets/images/floor.png');
     this.load.spritesheet('kaboom', '../assets/images/explode.png', 128, 128);
     this.load.spritesheet('explosion', '../assets/images/explosion1.png', 200, 141, 11);
     this.load.spritesheet('bullet', 'assets/images/bird.png', 34, 24, 1);

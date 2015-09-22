@@ -18,6 +18,8 @@
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
+      console.log(this.game)
+
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
       // this.player2 = new Player(this.game, 200, 1400, 'player', false);
@@ -25,12 +27,6 @@
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
-
-
-      this.ground = new Ground(this.game, 0, 1400, 4000, 112);
-      this.game.add.existing(this.ground);
-      this.ground.body.immovable = true;
-      this.ground.body.moves = false;
 
       // this.ground.setCollisionBetween(2, 12);
 
@@ -45,8 +41,11 @@
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
 
+      //ground
+      this.ground = new Ground(this.game, 0, 1322, 300, 213);
+      this.game.add.existing(this.ground);
 
-      //camera followingm player one
+      //camera following player one
       this.game.camera.follow(this.player1);
 
       this.flame = this.game.add.sprite(0, 0, 'kaboom');
@@ -57,19 +56,24 @@
     },
     update: function() {
 
-      // if (this.game.physics.arcade.collide(this.player1, this.ground)) {
-      //   this.player1.body.touching.down = true;
-      // };
+      if (this.game.physics.arcade.collide(this.player1, this.ground)) {
+        this.player1.setCollision(true);
+        // this.player1.body.touching.down = true;
+      } else {
+        this.player1.setCollision(false);
+      };
+
+      // console.log(this.player1.body)
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
 
+
+
+
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       this.game.physics.arcade.overlap(this.game.bullets, this.player2,
       this.collisionHandler, null, this);
-
-
-
 
       this.game.socketFunctions.updatePlay(this);
     },

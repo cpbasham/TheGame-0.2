@@ -5,8 +5,11 @@ var cursors;
 var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
-  // this.game.physics.enable(this);
-  // this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.enable(this, Phaser.Physics.ARCADE);
+  this.game.add.existing(this);
+
+
+  this.game.allowGravity;
 
   this.anchor.setTo(0.5, 0.5);
   this.scale.setTo(0.5, 0.5);
@@ -65,7 +68,17 @@ Player.prototype.animate = function(moving) {
 
 }
 
+Player.prototype.setCollision = function(state) {
+  return this.yolo = state;
+}
+
 Player.prototype.update = function() {
+
+  // console.log('hello, inside UPDATE function')
+  // console.log(this);
+  // console.log(this.body);
+
+  // console.log('i am in update for PLAYER')
 
   this.game.physics.arcade.enable(this);
 
@@ -86,16 +99,10 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // console.log(this.body.blocked.down);
-  console.log(this.body.wasTouching.down)
-
-
-
-  if (cursors.up.isDown && (this.body.touching.down || this.body.wasTouching.down || this.body.blocked.down)) {
-    this.body.velocity.y = -550;
-  };
-
-  debugger;
+  if (cursors.up.isDown && this.yolo) {
+    this.body.position.y -= 1;
+    this.body.velocity.y -= 450;
+  }
 
 };
 

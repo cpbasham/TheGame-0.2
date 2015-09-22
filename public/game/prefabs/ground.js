@@ -1,16 +1,21 @@
 'use strict';
 
-var platforms;
+// var platforms;
 
 var Ground = function(game, x, y, width, height) {
-  Phaser.TileSprite.call(this, game, x, y, 'ground');
+  Phaser.TileSprite.call(this, game, x, y, 'floor');
 
-    //;
+  this.game.physics.arcade.enableBody(this);
+  this.physicsType = Phaser.SPRITE;
 
-   this.platforms = this.game.add.group();
-   this.platforms.enableBody = true;
-   this.game.physics.arcade.enable(this)
-   this.platforms.createMultiple(10, 'ground');
+  this.body.immovable = true;
+  this.body.moves = false;
+  // debugger;
+  // this.platforms = this.game.add.group();
+  // this.platforms.enableBody = true;
+  this.game.physics.arcade.enable(this)
+  // this.platforms.createMultiple(10, 'floor');
+
   //  for (var i = 0; i < this.platforms.children.length; i++) {
   //    this.platforms.children[i].body.allowGravity = false;
   //    this.platforms.children[i].body.immovable = true;

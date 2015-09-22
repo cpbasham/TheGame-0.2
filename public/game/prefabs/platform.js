@@ -1,20 +1,23 @@
 'use strict';
 
-// var platforms;
+var platform1;
 
-var Ground = function(game, x, y, width, height) {
-  Phaser.TileSprite.call(this, game, x, y, 'floor');
+var Platform = function(game, x, y, width, height) {
+  Phaser.Sprite.call(this, game, x, y, 'ground');
 
-  this.game.physics.arcade.enableBody(this);
-  this.physicsType = Phaser.SPRITE;
+  this.game.physics.arcade.enable(this, Phaser.Physics.ARCADE);
 
   this.body.immovable = true;
   this.body.moves = false;
-  // debugger;
+
   // this.platforms = this.game.add.group();
   // this.platforms.enableBody = true;
   this.game.physics.arcade.enable(this)
-  // this.platforms.createMultiple(10, 'floor');
+  // this.platforms.createMultiple(10, 'ground');
+
+
+
+
 
   //  for (var i = 0; i < this.platforms.children.length; i++) {
   //    this.platforms.children[i].body.allowGravity = false;
@@ -32,14 +35,14 @@ var Ground = function(game, x, y, width, height) {
 
 };
 
-Ground.prototype = Object.create(Phaser.TileSprite.prototype);
-Ground.prototype.constructor = Ground;
+Platform.prototype = Object.create(Phaser.Sprite.prototype);
+Platform.prototype.constructor = Platform;
 
-Ground.prototype.update = function() {
+Platform.prototype.update = function() {
 
 
 
 
 };
 
-module.exports = Ground;
+module.exports = Platform;

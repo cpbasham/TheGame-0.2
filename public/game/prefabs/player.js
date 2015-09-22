@@ -5,8 +5,11 @@ var cursors;
 var Player = function(game, x, y, playerName, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
 
-  // this.game.physics.enable(this);
-  // this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.enable(this, Phaser.Physics.ARCADE);
+  this.game.add.existing(this);
+
+
+  this.game.allowGravity;
 
   this.anchor.setTo(0.5, 0.5);
   this.scale.setTo(0.5, 0.5);
@@ -23,6 +26,11 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   this.body.collideWorldBounds = true;
   this.face("right");
   this.animate(false);
+
+  // halo = this.add.sprite(0, 0, 'bullet');
+  // this.halo.anchor.setTo(3, 3);
+  // this.game.addChild(this.halo);
+  // this.physics.enable(this.halo, Phaser.Physics.ARCADE);
 
   // this.checkWorldBounds = true;
   // this.outOfBoundsKill = true;
@@ -60,12 +68,21 @@ Player.prototype.animate = function(moving) {
 
 }
 
+Player.prototype.setCollision = function(state) {
+  return this.yolo = state;
+}
+
 Player.prototype.update = function() {
 
-  this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.arcade.enable(this);
+
+
   cursors = this.game.input.keyboard.createCursorKeys();
 
+
+  this.body.gravity.y = 500;
   this.body.velocity.x = 0;
+
   if (cursors.left.isDown) {
     this.face("left");
     this.animate(true);
@@ -76,22 +93,10 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // if (cursors.up.isDown) {
-  //   console.log('pressing up');
-  //   this.body.velocity.x = 100;
-  // }
-
-
-  if (cursors.up.isDown && this.body.wasTouching.down) {
-    this.body.velocity.y -= 100;
-
-    // debugger;
-    console.log("yolo");
+  if (cursors.up.isDown && this.yolo) {
+    this.body.position.y -= 1;
+    this.body.velocity.y -= 450;
   }
-
-
-
-  // console.log(cursors);
 
 };
 

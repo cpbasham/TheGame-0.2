@@ -10,30 +10,30 @@ var nextFire = 0;
 var Bullet = function(game, x, y, player) {
   Phaser.Sprite.call(this, game, x, y, 'bullet');
 
-  // debugger;
 
   this.game.bullets.add(this);
   //this.game.physics.startSystem(Phaser.Physics.ARCADE);
-   this.player = player
-   this.game.physics.arcade.enableBody(this);
+  this.player = player
+  this.game.physics.arcade.enableBody(this);
+
+  // player.body.allowRotation = false;
 
 
-    game.physics.enable(player, Phaser.Physics.ARCADE);
-
-    // player.body.allowRotation = false;
-
-
-    this.body.collideWorldBounds = true;
+  this.body.collideWorldBounds = true;
 };
 
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
 Bullet.prototype.constructor = Bullet;
 
+Bullet.prototype.killBullet = function() {
+  
+}
+
 Bullet.prototype.update = function(){
     //player.rotation = this.game.physics.arcade.angleToPointer(player);
     // this.game.bullets.x = player.x;
     // this.game.bullets.y = player.y;
-
+    // debugger;
     if (this.game.input.activePointer.isDown)
     {
       if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0)

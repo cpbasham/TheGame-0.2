@@ -31,28 +31,28 @@ module.exports = function (grunt) {
         tasks: ['build']
       }
     },
-    // connect: {
-    //   options: {
-    //     port: 3000,
-    //     // change this to '0.0.0.0' to access the server from outside
-    //     hostname: 'localhost'
-    //   },
-    //   livereload: {
-    //     options: {
-    //       middleware: function (connect) {
-    //         return [
-    //           lrSnippet,
-    //           mountFolder(connect, 'public/dist')
-    //         ];
-    //       }
-    //     }
-    //   }
-    // },
-    // open: {
-    //   server: {
-    //     path: 'http://localhost:3000'
-    //   }
-    // },
+    connect: {
+      options: {
+        port: 3000,
+        // change this to '0.0.0.0' to access the server from outside
+        hostname: 'localhost'
+      },
+      livereload: {
+        options: {
+          middleware: function (connect) {
+            return [
+              lrSnippet,
+              mountFolder(connect, 'public/dist')
+            ];
+          }
+        }
+      }
+    },
+    open: {
+      server: {
+        path: 'http://localhost:3000'
+      }
+    },
     copy: {
       dist: {
         files: [

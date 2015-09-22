@@ -24,11 +24,11 @@
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      // this.player2 = new Player(this.game, 200, 1400, 'player', false);
+      this.player2 = new Player(this.game, 200, 1200, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      // this.game.add.existing(this.player2);
+      this.game.add.existing(this.player2);
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
@@ -69,17 +69,11 @@
 
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
         this.player1.setCollision(true);
-      } else {
-        this.player1.setCollision(false);
-      };
-
-      if (this.game.physics.arcade.collide(this.player1, this.platforms)) {
+      } else if (this.game.physics.arcade.collide(this.player1, this.platforms)) {
         this.player1.setCollision(true);
       } else {
         this.player1.setCollision(false);
       };
-
-      // console.log(this.player1.body)
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);

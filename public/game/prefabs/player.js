@@ -24,6 +24,11 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   this.face("right");
   this.animate(false);
 
+  // halo = this.add.sprite(0, 0, 'bullet');
+  // this.halo.anchor.setTo(3, 3);
+  // this.game.addChild(this.halo);
+  // this.physics.enable(this.halo, Phaser.Physics.ARCADE);
+
   // this.checkWorldBounds = true;
   // this.outOfBoundsKill = true;
 
@@ -63,11 +68,14 @@ Player.prototype.animate = function(moving) {
 Player.prototype.update = function() {
 
   this.game.physics.arcade.enable(this);
-  this.body.gravity.y = 500;
+
 
   cursors = this.game.input.keyboard.createCursorKeys();
 
+
+  this.body.gravity.y = 500;
   this.body.velocity.x = 0;
+
   if (cursors.left.isDown) {
     this.face("left");
     this.animate(true);
@@ -78,14 +86,16 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // console.log('console logging in player');
-  console.log(this.body.touching.down);
+  // console.log(this.body.blocked.down);
+  console.log(this.body.wasTouching.down)
 
-  if (cursors.up.isDown && this.body.touching.down) {
-    this.body.velocity.y = -150;
+
+
+  if (cursors.up.isDown && (this.body.touching.down || this.body.wasTouching.down || this.body.blocked.down)) {
+    this.body.velocity.y = -550;
   };
 
-
+  debugger;
 
 };
 

@@ -34,6 +34,8 @@
       this.ground.body.immovable = true;
       this.ground.body.moves = false;
 
+      // this.ground.setCollisionBetween(2, 12);
+
       //creating and adding weapon for players
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
@@ -55,10 +57,11 @@
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
-      console.log(this.ground.body)
 
       this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
       this.collisionHandler, null, this);
+
+
 
 
       this.game.socketFunctions.updatePlay(this);

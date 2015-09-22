@@ -152,7 +152,7 @@ Bullet.prototype.update = function(){
 var platforms;
 
 var Ground = function(game, x, y, width, height) {
-  Phaser.Sprite.call(this, game, x, y, 'ground');
+  Phaser.TileSprite.call(this, game, x, y, 'ground');
 
     //;
 
@@ -164,7 +164,7 @@ var Ground = function(game, x, y, width, height) {
   //    this.platforms.children[i].body.allowGravity = false;
   //    this.platforms.children[i].body.immovable = true;
   //  }
-  
+
    //this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
   // var platform = this.platforms.getFirstDead();
   // platforms.body.immovable = true;
@@ -176,7 +176,7 @@ var Ground = function(game, x, y, width, height) {
 
 };
 
-Ground.prototype = Object.create(Phaser.Sprite.prototype);
+Ground.prototype = Object.create(Phaser.TileSprite.prototype);
 Ground.prototype.constructor = Ground;
 
 Ground.prototype.update = function() {
@@ -214,6 +214,11 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   this.body.collideWorldBounds = true;
   this.face("right");
   this.animate(false);
+
+  // halo = this.add.sprite(0, 0, 'bullet');
+  // this.halo.anchor.setTo(3, 3);
+  // this.game.addChild(this.halo);
+  // this.physics.enable(this.halo, Phaser.Physics.ARCADE);
 
   // this.checkWorldBounds = true;
   // this.outOfBoundsKill = true;
@@ -254,11 +259,14 @@ Player.prototype.animate = function(moving) {
 Player.prototype.update = function() {
 
   this.game.physics.arcade.enable(this);
-  this.body.gravity.y = 500;
+
 
   cursors = this.game.input.keyboard.createCursorKeys();
 
+
+  this.body.gravity.y = 500;
   this.body.velocity.x = 0;
+
   if (cursors.left.isDown) {
     this.face("left");
     this.animate(true);
@@ -269,14 +277,16 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // console.log('console logging in player');
-  console.log(this.body.touching.down);
+  // console.log(this.body.blocked.down);
+  console.log(this.body.wasTouching.down)
 
-  if (cursors.up.isDown && this.body.touching.down) {
-    this.body.velocity.y = -150;
+
+
+  if (cursors.up.isDown && (this.body.touching.down || this.body.wasTouching.down || this.body.blocked.down)) {
+    this.body.velocity.y = -550;
   };
 
-
+  debugger;
 
 };
 
@@ -458,6 +468,8 @@ module.exports = Menu;
       this.ground.body.immovable = true;
       this.ground.body.moves = false;
 
+      // this.ground.setCollisionBetween(2, 12);
+
       //creating and adding weapon for players
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
@@ -479,10 +491,11 @@ module.exports = Menu;
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
-      console.log(this.ground.body)
 
       this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
       this.collisionHandler, null, this);
+
+
 
 
       this.game.socketFunctions.updatePlay(this);

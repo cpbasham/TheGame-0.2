@@ -3,7 +3,7 @@
 var platforms;
 
 var Ground = function(game, x, y, width, height) {
-  Phaser.Sprite.call(this, game, x, y, 'ground');
+  Phaser.TileSprite.call(this, game, x, y, 'ground');
 
     //;
 
@@ -15,7 +15,7 @@ var Ground = function(game, x, y, width, height) {
   //    this.platforms.children[i].body.allowGravity = false;
   //    this.platforms.children[i].body.immovable = true;
   //  }
-  
+
    //this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
   // var platform = this.platforms.getFirstDead();
   // platforms.body.immovable = true;
@@ -27,7 +27,7 @@ var Ground = function(game, x, y, width, height) {
 
 };
 
-Ground.prototype = Object.create(Phaser.Sprite.prototype);
+Ground.prototype = Object.create(Phaser.TileSprite.prototype);
 Ground.prototype.constructor = Ground;
 
 Ground.prototype.update = function() {

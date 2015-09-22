@@ -24,11 +24,11 @@
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      // this.player2 = new Player(this.game, 200, 1400, 'player', false);
+      this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      // this.game.add.existing(this.player2);
+      this.game.add.existing(this.player2);
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();

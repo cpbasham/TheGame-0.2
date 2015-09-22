@@ -171,14 +171,30 @@ Bullet.prototype.update = function(){
 },{}],4:[function(require,module,exports){
 'use strict';
 
+var platforms;
+
 var Ground = function(game, x, y, width, height) {
-  Phaser.TileSprite.call(this, game, x, y, width, height, 'ground');
+  Phaser.Sprite.call(this, game, x, y, 'ground');
 
-  this.game.physics.arcade.enableBody(this);
-  this.physicsType = Phaser.SPRITE;
+    //;
 
-  this.body.allowGravity = false;
-  this.body.immovable = true;
+   this.platforms = this.game.add.group();
+   this.platforms.enableBody = true;
+   this.game.physics.arcade.enable(this)
+   this.platforms.createMultiple(10, 'ground');
+  //  for (var i = 0; i < this.platforms.children.length; i++) {
+  //    this.platforms.children[i].body.allowGravity = false;
+  //    this.platforms.children[i].body.immovable = true;
+  //  }
+  
+   //this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+  // var platform = this.platforms.getFirstDead();
+  // platforms.body.immovable = true;
+  // platform.body.allowGravity = false;
+  // console.log(platform.body)
+
+
+
 
 };
 
@@ -187,7 +203,8 @@ Ground.prototype.constructor = Ground;
 
 Ground.prototype.update = function() {
 
-  // write your prefab's specific update code here
+
+
 
 };
 
@@ -258,7 +275,9 @@ Player.prototype.animate = function(moving) {
 
 Player.prototype.update = function() {
 
-  this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.arcade.enable(this);
+  this.body.gravity.y = 500;
+
   cursors = this.game.input.keyboard.createCursorKeys();
 
   this.body.velocity.x = 0;
@@ -272,22 +291,14 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // if (cursors.up.isDown) {
-  //   console.log('pressing up');
-  //   this.body.velocity.x = 100;
-  // }
+  // console.log('console logging in player');
+  console.log(this.body.touching.down);
+
+  if (cursors.up.isDown && this.body.touching.down) {
+    this.body.velocity.y = -150;
+  };
 
 
-  if (cursors.up.isDown && this.body.wasTouching.down) {
-    this.body.velocity.y -= 100;
-
-    // debugger;
-    console.log("yolo");
-  }
-
-
-
-  // console.log(cursors);
 
 };
 
@@ -442,9 +453,6 @@ module.exports = Menu;
   var Bullet = require('../prefabs/bullet');
   var cursors;
 
-
-
-
   function Play() {}
 
   Play.prototype = {
@@ -452,26 +460,23 @@ module.exports = Menu;
 
       this.enemies = {players: {}, bullets: {}};
 
-
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
-
-      // this.body.gravity.y = 500;
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
-      //movement for these are the same because of same keystrokes
-
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      // this.player2 = new Player(this.game, 200, 100, 'player', false);
+      this.player2 = new Player(this.game, 200, 1400, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
 
 
-      // this.ground = new Ground(this.game, 0, 700, 2000, 112);
-      // this.game.add.existing(this.ground);
+      this.ground = new Ground(this.game, 0, 1400, 4000, 112);
+      this.game.add.existing(this.ground);
+      this.ground.body.immovable = true;
+      this.ground.body.moves = false;
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
@@ -496,9 +501,13 @@ module.exports = Menu;
     },
     update: function() {
 
-      if (this.game.physics.arcade.collide(this.player1, this.ground)) {
-        this.player1.body.touching.down = true;
-      };
+      // if (this.game.physics.arcade.collide(this.player1, this.ground)) {
+      //   this.player1.body.touching.down = true;
+      // };
+
+      this.game.physics.arcade.collide(this.player1, this.ground);
+      this.game.physics.arcade.collide(this.player2, this.ground);
+      console.log(this.ground.body)
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       this.game.physics.arcade.overlap(this.game.bullets, this.player2,
@@ -506,11 +515,10 @@ module.exports = Menu;
 
 
       this.game.socketFunctions.updatePlay(this);
-
     },
 
+    collisionHandler: function(opponent, bullet){
 
-    collisionHandler: function(bullet, opponent){
       bullet.kill();
       opponent.kill()
       this.flame.reset(opponent.body.x, opponent.body.y-100);
@@ -520,10 +528,7 @@ module.exports = Menu;
     },
 
     respawn: function(opponent){
-        console.log(opponent);
-        // opponent.alive();
-        // debugger;
-        console.log(opponent.reset(this.game.world.randomX, this.game.world.randomY));
+      opponent.reset(this.game.world.randomX, this.game.world.randomY);
     },
 
 

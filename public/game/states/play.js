@@ -7,9 +7,6 @@
   var Bullet = require('../prefabs/bullet');
   var cursors;
 
-
-
-
   function Play() {}
 
   Play.prototype = {
@@ -17,26 +14,23 @@
 
       this.enemies = {players: {}, bullets: {}};
 
-
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
-
-      // this.body.gravity.y = 500;
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
-      //movement for these are the same because of same keystrokes
-
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      // this.player2 = new Player(this.game, 200, 100, 'player', false);
+      this.player2 = new Player(this.game, 200, 1400, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
 
 
-      // this.ground = new Ground(this.game, 0, 700, 2000, 112);
-      // this.game.add.existing(this.ground);
+      this.ground = new Ground(this.game, 0, 1400, 4000, 112);
+      this.game.add.existing(this.ground);
+      this.ground.body.immovable = true;
+      this.ground.body.moves = false;
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
@@ -61,9 +55,13 @@
     },
     update: function() {
 
-      if (this.game.physics.arcade.collide(this.player1, this.ground)) {
-        this.player1.body.touching.down = true;
-      };
+      // if (this.game.physics.arcade.collide(this.player1, this.ground)) {
+      //   this.player1.body.touching.down = true;
+      // };
+
+      this.game.physics.arcade.collide(this.player1, this.ground);
+      this.game.physics.arcade.collide(this.player2, this.ground);
+      console.log(this.ground.body)
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       this.game.physics.arcade.overlap(this.game.bullets, this.player2,
@@ -71,11 +69,10 @@
 
 
       this.game.socketFunctions.updatePlay(this);
-
     },
 
+    collisionHandler: function(opponent, bullet){
 
-    collisionHandler: function(bullet, opponent){
       bullet.kill();
       opponent.kill()
       this.flame.reset(opponent.body.x, opponent.body.y-100);
@@ -85,10 +82,7 @@
     },
 
     respawn: function(opponent){
-        console.log(opponent);
-        // opponent.alive();
-        // debugger;
-        console.log(opponent.reset(this.game.world.randomX, this.game.world.randomY));
+      opponent.reset(this.game.world.randomX, this.game.world.randomY);
     },
 
 

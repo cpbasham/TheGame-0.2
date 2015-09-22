@@ -48,6 +48,7 @@ io.sockets.on("connection", function(socket){
     serverData.y    = clientData.player.position.y;
     serverData.dir  = clientData.player.direction;
     serverData.currentFrame = clientData.player.currentFrame;
+    serverData.bullets = clientData.bullets;
   });
 
   socket.on("click", function(data){

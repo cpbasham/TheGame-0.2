@@ -15,6 +15,7 @@ socketFunctions.createPlay = function(ctx) {
   var game = ctx.game;
   var enemies = ctx.enemies;
   var socket = ctx.game.state.socket;
+
   socket.on("setup", function(data) {
     socket.clientId = data.clientId;
     for (var key in data.playerMap) {
@@ -42,6 +43,7 @@ socketFunctions.createPlay = function(ctx) {
       enemy.face(enemyData.dir);
       enemy.frame = enemyData.currentFrame;
       // enemy.animate(enemyData.isMoving)
+      console.log("HEY", enemyData.bullets);
     }
   });
   socket.on("playerDisconnected", function(data) {
@@ -52,6 +54,10 @@ socketFunctions.createPlay = function(ctx) {
 socketFunctions.updatePlay = function(ctx) {
   if (runningGrunt) { return; };
 
+  var liveBullets = ctx.game.bullets.children.filter(function(bullet) {
+    return bullet.alive;
+  });
+
   ctx.game.state.socket.emit("update", {
     player: {
       position: {
@@ -60,7 +66,8 @@ socketFunctions.updatePlay = function(ctx) {
       },
       direction: ctx.player1.body.direction,
       currentFrame: ctx.player1.frame
-    }
+    },
+    bullets: liveBullets;
   });
 }
 

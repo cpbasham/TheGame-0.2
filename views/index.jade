@@ -4,9 +4,10 @@ block content
   div(class="header")
     div(class="authentication")
       if user
-        span Welcome #{user.google.name}!&nbsp;
+        span Welcome to The GAME!
         span
           a(href="/logout") Logout
       else
-        a(href="/auth/google") Log in with Google
+        a(href="/auth/google") Google &nbsp;
+        a(href="/auth/facebook") Facebook
   #thegame

@@ -12,9 +12,7 @@
   Play.prototype = {
     create: function() {
 
-      this.enemies = {};
-
-      this.game.socketFunctions.createPlay(this);
+      this.enemies = {players: {}, bullets: {}};
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -22,11 +20,11 @@
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 1400, 'player', false);
+      // this.player2 = new Player(this.game, 200, 1400, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
+      // this.game.add.existing(this.player2);
 
 
       this.ground = new Ground(this.game, 0, 1400, 4000, 112);
@@ -37,6 +35,13 @@
       // this.ground.setCollisionBetween(2, 12);
 
       //creating and adding weapon for players
+      this.game.bullets = this.game.add.group();
+      this.game.bullets.enableBody = true;
+      this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+      this.game.bullets.createMultiple(1, 'bullet');
+      this.game.bullets.setAll('checkWorldBounds', true);
+      this.game.bullets.setAll('outOfBoundsKill', true);
+
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
 
@@ -48,6 +53,7 @@
       this.flame.scale.setTo(1.5, 1.5);
       this.blow = this.flame.animations.add('blow');
 
+      this.game.socketFunctions.createPlay(this);
     },
     update: function() {
 
@@ -58,7 +64,8 @@
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
 
-      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
+      // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
+      this.game.physics.arcade.overlap(this.game.bullets, this.player2,
       this.collisionHandler, null, this);
 
 
@@ -66,7 +73,6 @@
 
       this.game.socketFunctions.updatePlay(this);
     },
-
 
     collisionHandler: function(opponent, bullet){
 

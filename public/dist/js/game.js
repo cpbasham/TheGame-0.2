@@ -140,6 +140,10 @@ var Bullet = function(game, x, y, player) {
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
 Bullet.prototype.constructor = Bullet;
 
+Bullet.prototype.killBullet = function() {
+  
+}
+
 Bullet.prototype.update = function(){
     //player.rotation = this.game.physics.arcade.angleToPointer(player);
     // this.game.bullets.x = player.x;
@@ -555,31 +559,14 @@ module.exports = Menu;
       this.game.add.existing(this.ground);
 
       //platforms
-      // this.game.platforms = this.game.add.group();
-      // this.game.platforms.enableBody = true;
-      // this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
-      // this.game.platforms.createMultiple(5, 'platform');
-      // this.game.bullets.setAll('checkWorldBounds', true);
-      //
-      // this.game.platforms.create(100, 1200, 'ground');
-      // this.game.platforms.create(1200, 100, 'ground');
-      // this.game.platforms.create(200, 200, 'ground');
-      //
-      // this.platform1 = new Platform(this.game, 400, 400, 200, 200);
-      // this.platform2 = new Platform(this.game, 600, 500, 200, 200);
-      // this.platform3 = new Platform(this.game, 100, 400, 200, 200);
-      // this.platform4 = new Platform(this.game, 1200, 100, 200, 200);
-      // this.platform5 = new Platform(this.game, 100, 1200, 200, 200);
-      // this.game.add.existing(this.platform1);
-      // this.game.add.existing(this.platform2);
-      // this.game.add.existing(this.platform3);
-      // this.game.add.existing(this.platform4);
-      // this.game.add.existing(this.platform5);
-      // debugger
-      // Can I use OO for this?
-      // platform1 = new Platform(this.game, 100, 100, 100, 100);
-      // this.game.platforms.add(platform1);
-      // this.game.add.existing(this.platforms);
+      this.platforms = this.game.add.physicsGroup();
+      this.platforms.create(100, 1200, 'ground');
+      this.platforms.create(100, 100, 'ground');
+      this.platforms.create(200, 200, 'ground');
+      this.platforms.setAll('body.allowGravity', false);
+      this.platforms.setAll('body.immovable', true);
+      // this.platforms.setAll('body.velocity.x', 100);
+
 
       //camera following player one
       this.game.camera.follow(this.player1);
@@ -594,7 +581,12 @@ module.exports = Menu;
 
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
         this.player1.setCollision(true);
-        // this.player1.body.touching.down = true;
+      } else {
+        this.player1.setCollision(false);
+      };
+
+      if (this.game.physics.arcade.collide(this.player1, this.platforms)) {
+        this.player1.setCollision(true);
       } else {
         this.player1.setCollision(false);
       };
@@ -603,6 +595,8 @@ module.exports = Menu;
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
+
+      this.game.physics.arcade.collide(this.player1, this.platforms);
 
       // debugger;
       this.game.physics.arcade.collide(this.bullet1, this.ground);

@@ -25,6 +25,10 @@ var Bullet = function(game, x, y, player) {
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
 Bullet.prototype.constructor = Bullet;
 
+Bullet.prototype.killBullet = function() {
+  
+}
+
 Bullet.prototype.update = function(){
     //player.rotation = this.game.physics.arcade.angleToPointer(player);
     // this.game.bullets.x = player.x;

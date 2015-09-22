@@ -125,20 +125,16 @@ var nextFire = 0;
 var Bullet = function(game, x, y, player) {
   Phaser.Sprite.call(this, game, x, y, 'bullet');
 
-  // debugger;
 
   this.game.bullets.add(this);
   //this.game.physics.startSystem(Phaser.Physics.ARCADE);
-   this.player = player
-   this.game.physics.arcade.enableBody(this);
+  this.player = player
+  this.game.physics.arcade.enableBody(this);
+
+  // player.body.allowRotation = false;
 
 
-    game.physics.enable(player, Phaser.Physics.ARCADE);
-
-    // player.body.allowRotation = false;
-
-
-    this.body.collideWorldBounds = true;
+  this.body.collideWorldBounds = true;
 };
 
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
@@ -148,7 +144,7 @@ Bullet.prototype.update = function(){
     //player.rotation = this.game.physics.arcade.angleToPointer(player);
     // this.game.bullets.x = player.x;
     // this.game.bullets.y = player.y;
-
+    // debugger;
     if (this.game.input.activePointer.isDown)
     {
       if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0)
@@ -341,12 +337,6 @@ Player.prototype.setCollision = function(state) {
 }
 
 Player.prototype.update = function() {
-
-  // console.log('hello, inside UPDATE function')
-  // console.log(this);
-  // console.log(this.body);
-
-  // console.log('i am in update for PLAYER')
 
   this.game.physics.arcade.enable(this);
 
@@ -556,26 +546,25 @@ module.exports = Menu;
       this.game.bullets.setAll('checkWorldBounds', true);
       this.game.bullets.setAll('outOfBoundsKill', true);
 
-
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
+      // debugger;
 
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
       this.game.add.existing(this.ground);
 
       //platforms
-      this.game.platforms = this.game.add.group();
-      this.game.platforms.enableBody = true;
-      this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
-      this.game.platforms.createMultiple(5, 'platform');
-      this.game.bullets.setAll('checkWorldBounds', true);
-
-      this.game.platforms.create(100, 1200, 'platform');
-      this.game.platforms.create(1200, 100, 'platform');
-      this.game.platforms.create(200, 200, 'platform');
-
-
+      // this.game.platforms = this.game.add.group();
+      // this.game.platforms.enableBody = true;
+      // this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+      // this.game.platforms.createMultiple(5, 'platform');
+      // this.game.bullets.setAll('checkWorldBounds', true);
+      //
+      // this.game.platforms.create(100, 1200, 'ground');
+      // this.game.platforms.create(1200, 100, 'ground');
+      // this.game.platforms.create(200, 200, 'ground');
+      //
       // this.platform1 = new Platform(this.game, 400, 400, 200, 200);
       // this.platform2 = new Platform(this.game, 600, 500, 200, 200);
       // this.platform3 = new Platform(this.game, 100, 400, 200, 200);
@@ -615,8 +604,13 @@ module.exports = Menu;
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
 
+      // debugger;
+      this.game.physics.arcade.collide(this.bullet1, this.ground);
 
-
+      this.game.physics.arcade.overlap(this.game.bullets, this.ground,
+      function(ground, bullet) {
+        bullet.kill();
+      }, null, this);
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       this.game.physics.arcade.overlap(this.game.bullets, this.player2,

@@ -38,26 +38,25 @@
       this.game.bullets.setAll('checkWorldBounds', true);
       this.game.bullets.setAll('outOfBoundsKill', true);
 
-
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
+      // debugger;
 
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
       this.game.add.existing(this.ground);
 
       //platforms
-      this.game.platforms = this.game.add.group();
-      this.game.platforms.enableBody = true;
-      this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
-      this.game.platforms.createMultiple(5, 'platform');
-      this.game.bullets.setAll('checkWorldBounds', true);
-
-      this.game.platforms.create(100, 1200, 'ground');
-      this.game.platforms.create(1200, 100, 'ground');
-      this.game.platforms.create(200, 200, 'ground');
-
-
+      // this.game.platforms = this.game.add.group();
+      // this.game.platforms.enableBody = true;
+      // this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+      // this.game.platforms.createMultiple(5, 'platform');
+      // this.game.bullets.setAll('checkWorldBounds', true);
+      //
+      // this.game.platforms.create(100, 1200, 'ground');
+      // this.game.platforms.create(1200, 100, 'ground');
+      // this.game.platforms.create(200, 200, 'ground');
+      //
       // this.platform1 = new Platform(this.game, 400, 400, 200, 200);
       // this.platform2 = new Platform(this.game, 600, 500, 200, 200);
       // this.platform3 = new Platform(this.game, 100, 400, 200, 200);
@@ -97,8 +96,13 @@
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
 
+      // debugger;
+      this.game.physics.arcade.collide(this.bullet1, this.ground);
 
-
+      this.game.physics.arcade.overlap(this.game.bullets, this.ground,
+      function(ground, bullet) {
+        bullet.kill();
+      }, null, this);
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       this.game.physics.arcade.overlap(this.game.bullets, this.player2,

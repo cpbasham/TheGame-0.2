@@ -62,7 +62,9 @@ Player.prototype.animate = function(moving) {
 
 Player.prototype.update = function() {
 
-  this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.arcade.enable(this);
+  this.body.gravity.y = 500;
+
   cursors = this.game.input.keyboard.createCursorKeys();
 
   this.body.velocity.x = 0;
@@ -76,22 +78,14 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // if (cursors.up.isDown) {
-  //   console.log('pressing up');
-  //   this.body.velocity.x = 100;
-  // }
+  // console.log('console logging in player');
+  console.log(this.body.touching.down);
+
+  if (cursors.up.isDown && this.body.touching.down) {
+    this.body.velocity.y = -150;
+  };
 
 
-  if (cursors.up.isDown && this.body.wasTouching.down) {
-    this.body.velocity.y -= 100;
-
-    // debugger;
-    console.log("yolo");
-  }
-
-
-
-  // console.log(cursors);
 
 };
 

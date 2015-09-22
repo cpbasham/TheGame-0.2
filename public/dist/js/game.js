@@ -1,45 +1,47 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var runningGrunt;
+var runningGrunt = false;
 
 var Player = require("../prefabs/player.js");
+var Bullet = require("../prefabs/bullet.js");
 socketFunctions = {};
 
 socketFunctions.startClick = function(ctx) {
-  if (ctx) {
-    runningGrunt = false;
-    ctx.game.state.socket = io.connect();
-    ctx.game.state.socket.emit("play", {});
-  } else {
-    runningGrunt = true;
-  }
+  if (runningGrunt) { return; }
+  ctx.game.state.socket = io.connect();
+  ctx.game.state.socket.emit("play", {});
 }
 
 socketFunctions.createPlay = function(ctx) {
-  if (runningGrunt) { return };
+  if (runningGrunt) { return; };
 
   var game = ctx.game;
   var enemies = ctx.enemies;
   var socket = ctx.game.state.socket;
+
   socket.on("setup", function(data) {
     socket.clientId = data.clientId;
+
     for (var key in data.playerMap) {
       key = parseInt(key);
       if (key === socket.clientId) {continue;}
       var enemy = new Player(game, 200, 100, 'player', false);
       game.add.existing(enemy);
-      enemies[key] = enemy;
+      enemies.players[key] = enemy;
+      enemies.bullets[key] = [];
     }
   });
   socket.on("newPlayer", function(data) {
     var enemy = new Player(game, 200, 100, 'player', false);
     game.add.existing(enemy);
-    enemies[data.clientId] = enemy;
+    enemies.players[data.clientId] = enemy;
+    enemies.bullets[data.clientId] = [];
   });
   socket.on("updateAll", function(data) {
     for (var key in data) {
       key = parseInt(key);
       if (key === socket.clientId) {continue;}
-      var enemy = enemies[key];
+      var enemy = enemies.players[key];
+      var enemyBullets = enemies.bullets[key];
       var enemyData = data[key];
       enemy.position.x = enemyData.x;
       enemy.position.y = enemyData.y;
@@ -47,15 +49,36 @@ socketFunctions.createPlay = function(ctx) {
       enemy.face(enemyData.dir);
       enemy.frame = enemyData.currentFrame;
       // enemy.animate(enemyData.isMoving)
+      // enemy.bulletInfo = enemyData.bullets
+      while (enemyBullets.length > 0) { enemyBullets.pop().destroy(); }
+
+      for (var i=0; i<enemyData.bullets.length; i++) {
+        bulletData = enemyData.bullets[i];
+        var bullet = new Bullet(game, bulletData.x, bulletData.y, enemy);
+        game.add.existing(bullet);
+        enemyBullets.push(bullet);
+      }
     }
   });
   socket.on("playerDisconnected", function(data) {
-    delete enemies[data.clientId].destroy();
+    delete enemies.players[data.clientId].destroy();
+    for (var bullet in enemies.bullets[data.clientId]) {
+      bullet.destroy();
+    }
+    delete enemies.bullets[data.clientId];
   });
 }
 
 socketFunctions.updatePlay = function(ctx) {
-  if (runningGrunt) { return };
+  if (runningGrunt) { return; };
+
+  // console.log("MY BULLET:", ctx.game.bullets.children.filter(function(bullet) { return bullet.alive; })[0]);
+
+  var liveBullets = ctx.game.bullets.children.filter(function(bullet) {
+    return bullet.alive;
+  }).map(function(bullet) {
+    return {x: bullet.position.x, y: bullet.position.y};
+  });
 
   ctx.game.state.socket.emit("update", {
     player: {
@@ -65,13 +88,14 @@ socketFunctions.updatePlay = function(ctx) {
       },
       direction: ctx.player1.body.direction,
       currentFrame: ctx.player1.frame
-    }
+    },
+    bullets: liveBullets
   });
 }
 
 module.exports = socketFunctions
 
-},{"../prefabs/player.js":5}],2:[function(require,module,exports){
+},{"../prefabs/bullet.js":3,"../prefabs/player.js":5}],2:[function(require,module,exports){
 'use strict';
 
 //global variables
@@ -97,24 +121,21 @@ var fireRate = 100;
 var nextFire = 0;
 
 
+
 var Bullet = function(game, x, y, player) {
   Phaser.Sprite.call(this, game, x, y, 'bullet');
 
+  // debugger;
+
+  this.game.bullets.add(this);
   //this.game.physics.startSystem(Phaser.Physics.ARCADE);
    this.player = player
    this.game.physics.arcade.enableBody(this);
 
-    this.bullets = this.game.add.group();
-    this.bullets.enableBody = true;
-    this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
-    this.bullets.createMultiple(50, 'bullet');
-    this.bullets.setAll('checkWorldBounds', true);
-    this.bullets.setAll('outOfBoundsKill', true);
 
     game.physics.enable(player, Phaser.Physics.ARCADE);
 
-    player.body.allowRotation = false;
+    // player.body.allowRotation = false;
 
 
     this.body.collideWorldBounds = true;
@@ -125,38 +146,55 @@ Bullet.prototype.constructor = Bullet;
 
 Bullet.prototype.update = function(){
     //player.rotation = this.game.physics.arcade.angleToPointer(player);
-    // this.bullets.x = player.x;
-    // this.bullets.y = player.y;
+    // this.game.bullets.x = player.x;
+    // this.game.bullets.y = player.y;
 
     if (this.game.input.activePointer.isDown)
     {
-      if (this.game.time.now > nextFire && this.bullets.countDead() > 0)
+      if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0)
        {
           nextFire = this.game.time.now + fireRate;
 
-          var bullet = this.bullets.getFirstDead();
+          var bullet = this.game.bullets.getFirstDead();
 
           bullet.reset(this.player.x, this.player.y);
 
-          this.game.physics.arcade.moveToPointer(bullet, 3000);
+          this.game.physics.arcade.moveToPointer(bullet, 1000);
        }
     };
 
   }
+
 
   module.exports = Bullet;
 
 },{}],4:[function(require,module,exports){
 'use strict';
 
+var platforms;
+
 var Ground = function(game, x, y, width, height) {
-  Phaser.TileSprite.call(this, game, x, y, width, height, 'ground');
+  Phaser.Sprite.call(this, game, x, y, 'ground');
 
-  this.game.physics.arcade.enableBody(this);
-  this.physicsType = Phaser.SPRITE;
+    //;
 
-  this.body.allowGravity = false;
-  this.body.immovable = true;
+   this.platforms = this.game.add.group();
+   this.platforms.enableBody = true;
+   this.game.physics.arcade.enable(this)
+   this.platforms.createMultiple(10, 'ground');
+  //  for (var i = 0; i < this.platforms.children.length; i++) {
+  //    this.platforms.children[i].body.allowGravity = false;
+  //    this.platforms.children[i].body.immovable = true;
+  //  }
+  
+   //this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+  // var platform = this.platforms.getFirstDead();
+  // platforms.body.immovable = true;
+  // platform.body.allowGravity = false;
+  // console.log(platform.body)
+
+
+
 
 };
 
@@ -165,7 +203,8 @@ Ground.prototype.constructor = Ground;
 
 Ground.prototype.update = function() {
 
-  // write your prefab's specific update code here
+
+
 
 };
 
@@ -236,7 +275,9 @@ Player.prototype.animate = function(moving) {
 
 Player.prototype.update = function() {
 
-  this.game.physics.arcade.gravity.y = 500;
+  this.game.physics.arcade.enable(this);
+  this.body.gravity.y = 500;
+
   cursors = this.game.input.keyboard.createCursorKeys();
 
   this.body.velocity.x = 0;
@@ -250,22 +291,14 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
-  // if (cursors.up.isDown) {
-  //   console.log('pressing up');
-  //   this.body.velocity.x = 100;
-  // }
+  // console.log('console logging in player');
+  console.log(this.body.touching.down);
+
+  if (cursors.up.isDown && this.body.touching.down) {
+    this.body.velocity.y = -150;
+  };
 
 
-  if (cursors.up.isDown && this.body.wasTouching.down) {
-    this.body.velocity.y -= 100;
-
-    // debugger;
-    console.log("yolo");
-  }
-
-
-
-  // console.log(cursors);
 
 };
 
@@ -398,7 +431,7 @@ Menu.prototype = {
   },
   startClick: function() {
     this.game.socketFunctions = require('../clientSockets/sockets.js');
-    this.game.socketFunctions.startClick(false);  //TODO false == this
+    this.game.socketFunctions.startClick(this);  //TODO false == this
     this.game.state.start('play');
   },
   update: function() {
@@ -420,40 +453,39 @@ module.exports = Menu;
   var Bullet = require('../prefabs/bullet');
   var cursors;
 
-
-
-
   function Play() {}
 
   Play.prototype = {
     create: function() {
 
-      this.enemies = {};
-
-      this.game.socketFunctions.createPlay(this);
-
+      this.enemies = {players: {}, bullets: {}};
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-      // this.body.gravity.y = 500;
-
       this.background = this.game.add.sprite(0, 0, 'background');
-
-      //movement for these are the same because of same keystrokes
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 100, 'player', false);
+      this.player2 = new Player(this.game, 200, 1400, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
+      // this.game.add.existing(this.player2);
 
 
-      // this.ground = new Ground(this.game, 0, 700, 2000, 112);
-      // this.game.add.existing(this.ground);
+      this.ground = new Ground(this.game, 0, 1400, 4000, 112);
+      this.game.add.existing(this.ground);
+      this.ground.body.immovable = true;
+      this.ground.body.moves = false;
 
       //creating and adding weapon for players
+      this.game.bullets = this.game.add.group();
+      this.game.bullets.enableBody = true;
+      this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+      this.game.bullets.createMultiple(1, 'bullet');
+      this.game.bullets.setAll('checkWorldBounds', true);
+      this.game.bullets.setAll('outOfBoundsKill', true);
+
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
 
@@ -465,21 +497,25 @@ module.exports = Menu;
       this.flame.scale.setTo(1.5, 1.5);
       this.blow = this.flame.animations.add('blow');
 
+      this.game.socketFunctions.createPlay(this);
     },
     update: function() {
 
-      if (this.game.physics.arcade.collide(this.player1, this.ground)) {
-        this.player1.body.touching.down = true;
-      };
+      // if (this.game.physics.arcade.collide(this.player1, this.ground)) {
+      //   this.player1.body.touching.down = true;
+      // };
 
-      this.game.physics.arcade.overlap(this.bullet1.bullets, this.player2,
+      this.game.physics.arcade.collide(this.player1, this.ground);
+      this.game.physics.arcade.collide(this.player2, this.ground);
+      console.log(this.ground.body)
+
+      // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
+      this.game.physics.arcade.overlap(this.game.bullets, this.player2,
       this.collisionHandler, null, this);
 
 
       this.game.socketFunctions.updatePlay(this);
-
     },
-
 
     collisionHandler: function(opponent, bullet){
 

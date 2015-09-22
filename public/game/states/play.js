@@ -24,11 +24,11 @@
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 1000, 'player', false);
+      // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
+      // this.game.add.existing(this.player2);
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
@@ -76,7 +76,7 @@
       };
 
       this.game.physics.arcade.collide(this.player1, this.ground);
-      this.game.physics.arcade.collide(this.player2, this.ground);
+      // this.game.physics.arcade.collide(this.player2, this.ground);
 
       this.game.physics.arcade.collide(this.player1, this.platforms);
 
@@ -89,8 +89,8 @@
       }, null, this);
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
-      this.game.physics.arcade.overlap(this.game.bullets, this.player2,
-      this.collisionHandler, null, this);
+      // this.game.physics.arcade.overlap(this.game.bullets, this.player2,
+      //   this.collisionHandler, null, this);
 
       this.game.socketFunctions.updatePlay(this);
     },
@@ -98,10 +98,10 @@
     collisionHandler: function(opponent, bullet){
 
       bullet.kill();
-      opponent.kill()
-      this.flame.reset(opponent.body.x, opponent.body.y-100);
-      this.flame.animations.play('blow', 30, false, true);
-      this.respawn(opponent);
+      // opponent.kill()
+      // this.flame.reset(opponent.body.x, opponent.body.y-100);
+      // this.flame.animations.play('blow', 30, false, true);
+      // this.respawn(opponent);
 
     },
 

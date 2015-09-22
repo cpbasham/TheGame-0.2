@@ -78,14 +78,14 @@ Player.prototype.update = function() {
     this.animate(false);
   }
 
+  // console.log('console logging in player');
+  console.log(this.body.touching.down);
 
-  if (cursors.up.isDown) {
+  if (cursors.up.isDown && this.body.touching.down) {
     this.body.velocity.y = -150;
   };
 
 
-
-  // console.log(cursors);
 
 };
 

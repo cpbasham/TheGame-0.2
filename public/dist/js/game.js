@@ -492,11 +492,7 @@ module.exports = Menu;
     },
 
     respawn: function(opponent){
-
-        // opponent.alive();
-        // debugger;
-
-        opponent.reset(this.game.world.randomX, this.game.world.randomY);
+      opponent.reset(this.game.world.randomX, this.game.world.randomY);
     },
 
 

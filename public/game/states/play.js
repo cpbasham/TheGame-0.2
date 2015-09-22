@@ -5,7 +5,9 @@
   var Ground = require('../prefabs/ground');
   var Player = require('../prefabs/player');
   var Bullet = require('../prefabs/bullet');
-  var cursors;
+  var Platform = require('../prefabs/platform');
+
+
 
   function Play() {}
 
@@ -28,8 +30,6 @@
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
 
-      // this.ground.setCollisionBetween(2, 12);
-
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
       this.game.bullets.enableBody = true;
@@ -38,12 +38,41 @@
       this.game.bullets.setAll('checkWorldBounds', true);
       this.game.bullets.setAll('outOfBoundsKill', true);
 
+
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
 
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
       this.game.add.existing(this.ground);
+
+      //platforms
+      this.game.platforms = this.game.add.group();
+      this.game.platforms.enableBody = true;
+      this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+      this.game.platforms.createMultiple(5, 'platform');
+      this.game.bullets.setAll('checkWorldBounds', true);
+
+      this.game.platforms.create(100, 1200, 'ground');
+      this.game.platforms.create(1200, 100, 'ground');
+      this.game.platforms.create(200, 200, 'ground');
+
+
+      // this.platform1 = new Platform(this.game, 400, 400, 200, 200);
+      // this.platform2 = new Platform(this.game, 600, 500, 200, 200);
+      // this.platform3 = new Platform(this.game, 100, 400, 200, 200);
+      // this.platform4 = new Platform(this.game, 1200, 100, 200, 200);
+      // this.platform5 = new Platform(this.game, 100, 1200, 200, 200);
+      // this.game.add.existing(this.platform1);
+      // this.game.add.existing(this.platform2);
+      // this.game.add.existing(this.platform3);
+      // this.game.add.existing(this.platform4);
+      // this.game.add.existing(this.platform5);
+      // debugger
+      // Can I use OO for this?
+      // platform1 = new Platform(this.game, 100, 100, 100, 100);
+      // this.game.platforms.add(platform1);
+      // this.game.add.existing(this.platforms);
 
       //camera following player one
       this.game.camera.follow(this.player1);

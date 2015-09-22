@@ -74,12 +74,6 @@ Player.prototype.setCollision = function(state) {
 
 Player.prototype.update = function() {
 
-  // console.log('hello, inside UPDATE function')
-  // console.log(this);
-  // console.log(this.body);
-
-  // console.log('i am in update for PLAYER')
-
   this.game.physics.arcade.enable(this);
 
 

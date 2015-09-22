@@ -95,7 +95,7 @@ socketFunctions.updatePlay = function(ctx) {
 
 module.exports = socketFunctions
 
-},{"../prefabs/bullet.js":3,"../prefabs/player.js":5}],2:[function(require,module,exports){
+},{"../prefabs/bullet.js":3,"../prefabs/player.js":6}],2:[function(require,module,exports){
 'use strict';
 
 //global variables
@@ -112,7 +112,7 @@ window.onload = function () {
   game.state.start('boot');
 };
 
-},{"./states/boot":6,"./states/gameover":7,"./states/menu":8,"./states/play":9,"./states/preload":10}],3:[function(require,module,exports){
+},{"./states/boot":7,"./states/gameover":8,"./states/menu":9,"./states/play":10,"./states/preload":11}],3:[function(require,module,exports){
 'use strict';
 
 var bullets;
@@ -216,6 +216,56 @@ Ground.prototype.update = function() {
 module.exports = Ground;
 
 },{}],5:[function(require,module,exports){
+'use strict';
+
+var platform1;
+
+var Platform = function(game, x, y, width, height) {
+  Phaser.Sprite.call(this, game, x, y, 'ground');
+
+  this.game.physics.arcade.enable(this, Phaser.Physics.ARCADE);
+
+  this.body.immovable = true;
+  this.body.moves = false;
+
+  // this.platforms = this.game.add.group();
+  // this.platforms.enableBody = true;
+  this.game.physics.arcade.enable(this)
+  // this.platforms.createMultiple(10, 'ground');
+
+
+
+
+
+  //  for (var i = 0; i < this.platforms.children.length; i++) {
+  //    this.platforms.children[i].body.allowGravity = false;
+  //    this.platforms.children[i].body.immovable = true;
+  //  }
+
+   //this.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+  // var platform = this.platforms.getFirstDead();
+  // platforms.body.immovable = true;
+  // platform.body.allowGravity = false;
+  // console.log(platform.body)
+
+
+
+
+};
+
+Platform.prototype = Object.create(Phaser.Sprite.prototype);
+Platform.prototype.constructor = Platform;
+
+Platform.prototype.update = function() {
+
+
+
+
+};
+
+module.exports = Platform;
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var cursors;
@@ -326,7 +376,7 @@ Player.prototype.update = function() {
 
 module.exports = Player;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 'use strict';
 
@@ -370,7 +420,7 @@ Boot.prototype = {
 
 module.exports = Boot;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 'use strict';
 function GameOver() {}
@@ -398,7 +448,7 @@ GameOver.prototype = {
 };
 module.exports = GameOver;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 'use strict';
 
@@ -465,7 +515,7 @@ Menu.prototype = {
 
 module.exports = Menu;
 
-},{"../clientSockets/sockets.js":1}],9:[function(require,module,exports){
+},{"../clientSockets/sockets.js":1}],10:[function(require,module,exports){
 
   'use strict';
 
@@ -473,7 +523,9 @@ module.exports = Menu;
   var Ground = require('../prefabs/ground');
   var Player = require('../prefabs/player');
   var Bullet = require('../prefabs/bullet');
-  var cursors;
+  var Platform = require('../prefabs/platform');
+
+
 
   function Play() {}
 
@@ -496,8 +548,6 @@ module.exports = Menu;
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
 
-      // this.ground.setCollisionBetween(2, 12);
-
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
       this.game.bullets.enableBody = true;
@@ -506,12 +556,41 @@ module.exports = Menu;
       this.game.bullets.setAll('checkWorldBounds', true);
       this.game.bullets.setAll('outOfBoundsKill', true);
 
+
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
 
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
       this.game.add.existing(this.ground);
+
+      //platforms
+      this.game.platforms = this.game.add.group();
+      this.game.platforms.enableBody = true;
+      this.game.platforms.physicsBodyType = Phaser.Physics.ARCADE;
+      this.game.platforms.createMultiple(5, 'platform');
+      this.game.bullets.setAll('checkWorldBounds', true);
+
+      this.game.platforms.create(100, 1200, 'platform');
+      this.game.platforms.create(1200, 100, 'platform');
+      this.game.platforms.create(200, 200, 'platform');
+
+
+      // this.platform1 = new Platform(this.game, 400, 400, 200, 200);
+      // this.platform2 = new Platform(this.game, 600, 500, 200, 200);
+      // this.platform3 = new Platform(this.game, 100, 400, 200, 200);
+      // this.platform4 = new Platform(this.game, 1200, 100, 200, 200);
+      // this.platform5 = new Platform(this.game, 100, 1200, 200, 200);
+      // this.game.add.existing(this.platform1);
+      // this.game.add.existing(this.platform2);
+      // this.game.add.existing(this.platform3);
+      // this.game.add.existing(this.platform4);
+      // this.game.add.existing(this.platform5);
+      // debugger
+      // Can I use OO for this?
+      // platform1 = new Platform(this.game, 100, 100, 100, 100);
+      // this.game.platforms.add(platform1);
+      // this.game.add.existing(this.platforms);
 
       //camera following player one
       this.game.camera.follow(this.player1);
@@ -568,7 +647,7 @@ module.exports = Menu;
 
   module.exports = Play;
 
-},{"../prefabs/bullet":3,"../prefabs/ground":4,"../prefabs/player":5}],10:[function(require,module,exports){
+},{"../prefabs/bullet":3,"../prefabs/ground":4,"../prefabs/platform":5,"../prefabs/player":6}],11:[function(require,module,exports){
 
 'use strict';
 function Preload() {

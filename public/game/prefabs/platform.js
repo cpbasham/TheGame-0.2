@@ -1,6 +1,6 @@
 'use strict';
 
-// var platforms;
+var platform1;
 
 var Platform = function(game, x, y, width, height) {
   Phaser.Sprite.call(this, game, x, y, 'ground');
@@ -14,6 +14,9 @@ var Platform = function(game, x, y, width, height) {
   // this.platforms.enableBody = true;
   this.game.physics.arcade.enable(this)
   // this.platforms.createMultiple(10, 'ground');
+
+
+
 
 
   //  for (var i = 0; i < this.platforms.children.length; i++) {

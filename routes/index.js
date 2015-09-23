@@ -19,6 +19,7 @@ module.exports = function(express,passport){
     })
   );
 
+
   router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
@@ -28,7 +29,7 @@ module.exports = function(express,passport){
   );
 
   router.get('/thegame', function(req,res){
-    res.render('game', {title: 'DA GAME'});
+    res.render('game', {title: 'DA GAME', user: req.user});
   });
 
   function isLoggedIn(req, res, next) {

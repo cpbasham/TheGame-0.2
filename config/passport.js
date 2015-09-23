@@ -5,6 +5,7 @@ var User = require('../models/user');
 var configAuth = require('./auth');
 
 
+
 module.exports = function(passport) {
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {

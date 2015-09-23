@@ -30,7 +30,7 @@ app.use(session({ secret: process.env.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-server.listen(4000);
+server.listen(8080);
 
 var nextClientId = 0;
 var playerMap = {};

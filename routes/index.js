@@ -3,6 +3,7 @@ module.exports = function(express,passport){
   var router = express.Router();
 
   router.get('/', function(req, res, next) {
+
     res.render('index', { title: 'Express', user: req.user });
   });
 
@@ -14,7 +15,9 @@ module.exports = function(express,passport){
   router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
   router.get('/auth/google/callback',
     passport.authenticate('google', {
+
       successRedirect : '/thegame',
+
       failureRedirect : '/'
     })
   );
@@ -22,10 +25,13 @@ module.exports = function(express,passport){
   router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
+
       successRedirect : '/thegame',
+
       failureRedirect : '/'
     })
   );
+
 
   router.get('/thegame', function(req,res){
     res.render('game', {title: 'DA GAME'});

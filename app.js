@@ -11,6 +11,7 @@ var passport = require('passport');
 var session = require('express-session');
 
 
+
 // load passport.js
 require('./config/passport.js')(passport);
 
@@ -35,6 +36,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 server.listen(8080);
 

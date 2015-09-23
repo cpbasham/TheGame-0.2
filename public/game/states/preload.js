@@ -14,12 +14,19 @@ Preload.prototype = {
     // ????
     this.asset.anchor.setTo(-1, -1);
 
-    //load game assets:
+    //load game assets: (NEW)
+    this.load.image('background', 'assets/images/Stage.png');
+    this.load.image('platformSmall', 'assets/images/platformsmall.png');
+    this.load.image('platformLarge', 'assets/images/platformlarge.png');
+    this.load.image('ground', 'assets/images/newGround.png');
+
+
+    //load game assets: (OLD)
     this.load.image('startButton', 'assets/images/start-button.png');
-    this.load.image('background', 'assets/images/background.png');
-    this.load.image('ground', 'assets/images/ground.png');
-    this.load.image('ground1', 'assets/images/ground1.png');  //tried to crop out clear space
-    this.load.image('floor', 'assets/images/floor.png');
+    this.load.image('backgroundOld', 'assets/images/background.png');
+    this.load.image('groundOld', 'assets/images/ground.png');
+    this.load.image('ground1Old', 'assets/images/ground1.png');  //tried to crop out clear space
+    this.load.image('floorOld', 'assets/images/floor.png');
     this.load.spritesheet('kaboom', '../assets/images/explode.png', 128, 128);
     this.load.spritesheet('explosion', '../assets/images/explosion1.png', 200, 141, 11);
     this.load.spritesheet('bullet', 'assets/images/bird.png', 34, 24, 1);
@@ -35,7 +42,7 @@ Preload.prototype = {
   },
   update: function() {
     if(!!this.ready) {
-      this.game.state.start('menu');
+      this.game.state.start('menu');   //TODO: Change this to 'menu'
     }
   },
   onLoadComplete: function() {

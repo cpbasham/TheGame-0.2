@@ -12,7 +12,7 @@ var Player = function(game, x, y, playerName, controllable, frame) {
   this.game.allowGravity;
 
   this.anchor.setTo(0.5, 0.5);
-  this.scale.setTo(0.5, 0.5);
+  // this.scale.setTo(0.5, 0.5);
 
   this.animations.add('run');
   this.animations.play('run', 15, true);
@@ -24,7 +24,7 @@ var Player = function(game, x, y, playerName, controllable, frame) {
 
   this.game.physics.arcade.enableBody(this);
   this.body.collideWorldBounds = true;
-  this.face("right");
+  // this.face("right");
   this.animate(false);
 
   // halo = this.add.sprite(0, 0, 'bullet');
@@ -50,10 +50,10 @@ Player.prototype.constructor = Player;
 Player.prototype.face = function(direction) {
   if (direction === "left") {
     this.body.direction = "left";
-    this.scale.x = -0.5;
+    this.scale.x = -1;
   } else if (direction === "right") {
     this.body.direction = "right";
-    this.scale.x = 0.5;
+    this.scale.x = 1;
   }
 }
 Player.prototype.animate = function(moving) {

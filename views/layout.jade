@@ -3,6 +3,17 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    div(class="header")
+    div(class="authentication")
+      if user
+        span Welcome to The GAME!
+        span
+          a(href="/logout") Logout
+      else
+        a(href="/auth/google") Google &nbsp;
+        a(href="/auth/facebook") Facebook
+    script(src="http://code.jquery.com/jquery-latest.min.js")
+    script(src="/socket.io/socket.io.js")
+    body
+      block content
 

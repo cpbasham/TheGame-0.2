@@ -17,40 +17,36 @@ socketFunctions.createPlay = function(ctx) {
   var enemies = ctx.enemies;
   var socket = ctx.game.state.socket;
 
-  socket.on("setup", function(data) {
-    socket.clientId = data.clientId;
-
-    for (var key in data.playerMap) {
-      key = parseInt(key);
-      if (key === socket.clientId) {continue;}
+  socket.on("setup", function(playerMap) {
+    for (var key in playerMap) {
+      if (key === socket.id) {continue;}
       var enemy = new Player(game, 200, 100, 'player', false);
       game.add.existing(enemy);
       enemies.players[key] = enemy;
       enemies.bullets[key] = [];
     }
   });
-  socket.on("newPlayer", function(data) {
+  socket.on("newPlayer", function(playerId) {
     var enemy = new Player(game, 200, 100, 'player', false);
     game.add.existing(enemy);
-    enemies.players[data.clientId] = enemy;
-    enemies.bullets[data.clientId] = [];
+    enemies.players[playerId] = enemy;
+    enemies.bullets[playerId] = [];
   });
   socket.on("updateAll", function(data) {
     for (var key in data) {
-      key = parseInt(key);
-      if (key === socket.clientId) {
+      if (key === socket.id) {
         handleSelf(data, key, ctx);
       } else {
         handleEnemy(data, key, ctx);
       }
     }
   });
-  socket.on("playerDisconnected", function(data) {
-    delete enemies.players[data.clientId].destroy();
-    for (var bullet in enemies.bullets[data.clientId]) {
+  socket.on("playerDisconnected", function(playerId) {
+    delete enemies.players[playerId].destroy();
+    for (var bullet in enemies.bullets[playerId]) {
       bullet.destroy();
     }
-    delete enemies.bullets[data.clientId];
+    delete enemies.bullets[playerId];
   });
 }
 
@@ -61,7 +57,7 @@ socketFunctions.updatePlay = function(ctx) {
   for (var enemyClientId in ctx.enemies.players) {
     var enemy = ctx.enemies.players[enemyClientId];
     if (enemy.visible && ctx.game.physics.arcade.overlap(ctx.game.bullets, enemy, ctx.collisionHandler, null, ctx)) {
-      var hitPlayer = { id: parseInt(enemyClientId) };
+      var hitPlayer = { id: enemyClientId };
       hitPlayers.push(hitPlayer);
     }
   }

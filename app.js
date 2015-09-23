@@ -13,37 +13,35 @@ var app = express();
 
 server.listen(4000);
 
-var nextClientId = 0;
+var RECEIVED_ROOM_NAME = 'test-room';
+
+// var rooms = {};
 var playerMap = {};
 io.sockets.on("connection", function(socket){
-  console.log("socket connected");
-  socket.clientId = nextClientId;
-  nextClientId++;
-  playerMap[socket.clientId] = {x:0, y:0, dir:"right", isMoving:false, status:"alive"};
-  // console.log("added", socket.clientId, "to playerMap");
+  console.log("Socket connected:", socket.id);
+  socket.join(RECEIVED_ROOM_NAME, function() {
+    // if (! rooms.hasOwnProperty(RECEIVED_ROOM_NAME)) {
+    //   rooms[RECEIVED_ROOM_NAME] = { playerMap: {} };
+    // }
+    // var playerMap = rooms[RECEIVED_ROOM_NAME].playerMap;
+    playerMap[socket.id] = {x:0, y:0, dir:"right", isMoving:false, status:"alive"};
 
-  socket.emit("setup",
-    {
-      clientId: socket.clientId,
-      playerMap: playerMap
-    }
-  );
+    socket.emit("setup", playerMap);
+  });
 
-  // console.log(io.sockets.sockets[0]);
-  // console.log(io.sockets.sockets[1]);
+
 
   socket.on("disconnect", function(data) {
-    socket.broadcast.emit("playerDisconnected", {clientId: socket.clientId});
-    delete playerMap[socket.clientId];
+    socket.broadcast.emit("playerDisconnected", socket.id);
+    delete playerMap[socket.id];
   });
 
   socket.on("play", function(data){
-    socket.broadcast.emit("newPlayer", {clientId: socket.clientId});
-    // console.log(data.data)
+    socket.broadcast.emit("newPlayer", socket.id);
   });
 
   socket.on("update", function(clientData){
-    var serverPlayer  = playerMap[socket.clientId];
+    var serverPlayer  = playerMap[socket.id];
     serverPlayer.x    = clientData.player.position.x;
     serverPlayer.y    = clientData.player.position.y;
     serverPlayer.dir  = clientData.player.direction;
@@ -54,23 +52,6 @@ io.sockets.on("connection", function(socket){
       playerMap[hitPlayerId].status = "hit";
     }
   });
-
-  socket.on("click", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("left", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("right", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("bullet", function(data){
-    console.log(data.data)
-  });
-
 });
 
 setInterval(function() {
@@ -86,7 +67,6 @@ function checkPlayer(player) {
     player.status = "dead";
     setTimeout(function() {
       player.status = "alive";
-      // console.log("P KEY:", key);
     }, 1000);
   }
 }

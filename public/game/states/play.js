@@ -20,15 +20,17 @@
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
-      console.log(this.game)
-
       //creating players
-      this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 1200, 'player', false);
+      this.player1 = new Player(this.game, 450, 100,  'player1', true);
+      this.player2 = new Player(this.game, 200, 100, 'player2', true);
+     this.player3 = new Player(this.game, 300, 100,  'player3', true);
+      this.player4 = new Player(this.game, 400, 100, ' player4', false);
 
-      //adding players to stage
+      // //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
+      //this.game.add.existing(this.player2);
+     // this.game.add.existing(this.player3);
+      this.game.add.existing(this.player4);
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
@@ -40,7 +42,7 @@
 
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
-      // debugger;
+
 
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
@@ -56,7 +58,7 @@
       // this.platforms.setAll('body.velocity.x', 100);
 
 
-      //camera following player one
+      //camera following player
       this.game.camera.follow(this.player1);
 
       this.flame = this.game.add.sprite(0, 0, 'kaboom');
@@ -77,12 +79,8 @@
 
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
-
       this.game.physics.arcade.collide(this.player1, this.platforms);
-
-      // debugger;
       this.game.physics.arcade.collide(this.bullet1, this.ground);
-
       this.game.physics.arcade.overlap(this.game.bullets, this.ground,
       function(ground, bullet) {
         bullet.kill();

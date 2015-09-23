@@ -2,8 +2,8 @@
 
 var cursors;
 
-var Player = function(game, x, y, playerName, controllable, frame) {
-  Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
+var Player = function(game, x, y, player, controllable, frame) {
+  Phaser.Sprite.call(this, game, x, y, player, controllable, frame);
 
   this.game.physics.enable(this, Phaser.Physics.ARCADE);
   this.game.add.existing(this);
@@ -11,21 +11,27 @@ var Player = function(game, x, y, playerName, controllable, frame) {
 
   this.game.allowGravity;
 
-  this.anchor.setTo(0.5, 0.5);
-  this.scale.setTo(0.5, 0.5);
+  //this.anchor.setTo(0.5, 0.5);
+  //this.scale.setTo(0.5, 0.5);
 
-  this.animations.add('run');
-  this.animations.play('run', 15, true);
+  //this.animations.add('run');
+  // this.animations.play('run', 15, true);
 
-  this.animations.add('left',[0,1,2], 10, true);
-  this.animations.add('right',[3,4,5], 10, true);
-  //this.animations.add('jump',[], 10, true);
-  //this.animations.add('shoot'[] 10, true);
+  this.animations.add('dead',[1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true);
+  this.animations.add('happy',[11, 12, 13, 14, 15, 16, 17, 18, 19], 10, true);
+  this.animations.add('hurt',[20, 21, 22, 23, 24, 25, 26, 27, 28, 29], 10, true);
+  this.animations.add('jumpshoot',[30, 31, 32, 33, 34, 35, 36, 37, 38, 39], 10, true);
+  this.animations.add('jumpthrow',[40, 41, 42, 43, 44, 45, 46, 47, 48, 49], 10, true);
+  this.animations.add('jump',[50, 51, 52, 53, 54, 55, 56, 57, 58, 59], 10, true);
+  this.animations.add('melee',[60, 61, 62, 63, 64, 65, 66, 67, 68, 69], 10, true);
+  this.animations.add('runshoot',[70, 71, 72, 73, 74, 75, 76, 77, 78, 79], 10, true);
+  this.animations.add('right',[80, 81, 82, 83, 84, 85, 86, 87, 88, 89], 10, true);
+
 
   this.game.physics.arcade.enableBody(this);
   this.body.collideWorldBounds = true;
   this.face("right");
-  this.animate(false);
+  //this.animate(false);
 
   // halo = this.add.sprite(0, 0, 'bullet');
   // this.halo.anchor.setTo(3, 3);
@@ -50,10 +56,10 @@ Player.prototype.constructor = Player;
 Player.prototype.face = function(direction) {
   if (direction === "left") {
     this.body.direction = "left";
-    this.scale.x = -0.5;
+    this.scale.x = -1;
   } else if (direction === "right") {
     this.body.direction = "right";
-    this.scale.x = 0.5;
+    this.scale.x = 1;;
   }
 }
 Player.prototype.animate = function(moving) {

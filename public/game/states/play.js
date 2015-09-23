@@ -6,6 +6,7 @@
   var Player = require('../prefabs/player');
   var Bullet = require('../prefabs/bullet');
   var Platform = require('../prefabs/platform');
+  var text;
 
   function Play() {}
 
@@ -18,13 +19,45 @@
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
+
       //creating players
-      this.player1 = new Player(this.game, 100, 100, 'player', true);
+      this.player1 = new Player(this.game, 3100, 100, 'player', true);
+
+      //text above player sprite
+      this.player1.inputEnabled = true;
+      var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.player1.width, align: "center" };
+      text = this.game.add.text(0, 0, "YOLO", style);
+      text.anchor.set(0.5);
       // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
+
+
+      //platforms
+      this.platforms = this.game.add.physicsGroup();
+      var platform = this.platforms.create(1398, 255, 'platformLarge');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(200, 650, 'platformLarge');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(2600, 600, 'platformLarge');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(600, 275, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(230, 195, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(3450, 325, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(2750, 200, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(1700, 700, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+
+      this.platforms.setAll('body.allowGravity', false);
+      this.platforms.setAll('body.immovable', true);
+
+
 
 
       //creating and adding weapon for players
@@ -40,20 +73,17 @@
 
 
       //ground
-      this.ground = new Ground(this.game, 0, 1322, 300, 213);
+      this.ground = new Ground(this.game, 0, 982, 4096, 41);
       this.game.add.existing(this.ground);
 
 
-      // this.groundtest = new Ground(this.game, 0, 1000, 1300, 1213);
-      // this.game.add.existing(this.groundtest);
 
-      //platforms
-      this.platforms = this.game.add.physicsGroup();
-      this.platforms.create(100, 1200, 'ground');
-      this.platforms.create(100, 100, 'ground');
-      this.platforms.create(200, 200, 'ground');
-      this.platforms.setAll('body.allowGravity', false);
-      this.platforms.setAll('body.immovable', true);
+
+
+
+      // this.platforms.create(100, 1200, 'ground');
+      // this.platforms.create(100, 100, 'ground');
+      // this.platforms.create(200, 200, 'ground');
       // this.platforms.setAll('body.velocity.x', 100);
 
 
@@ -90,6 +120,11 @@
       function(ground, bullet) {
         bullet.kill();
       }, null, this);
+
+      // name above player positioning
+      text.x = Math.floor(this.player1.x);
+      text.y = Math.floor(this.player1.y - (this.player1.height/2));
+
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       // this.game.physics.arcade.overlap(this.game.bullets, this.player2,

@@ -11,6 +11,10 @@ var passport = require('passport');
 var session = require('express-session');
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e25a59315d6d91185a1d8d673d895f8365636082
 // load passport.js
 require('./config/passport.js')(passport);
 
@@ -28,9 +32,14 @@ io = require('socket.io').listen(server);
 
 
 // required for passport
-app.use(session({ secret: process.env.SESSION_SECRET }));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 server.listen(8080);
 

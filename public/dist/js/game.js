@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var runningGrunt = true;
+var runningGrunt = false;
 
 var Player = require("../prefabs/player.js");
 var Bullet = require("../prefabs/bullet.js");
@@ -39,24 +39,10 @@ socketFunctions.createPlay = function(ctx) {
   socket.on("updateAll", function(data) {
     for (var key in data) {
       key = parseInt(key);
-      if (key === socket.clientId) {continue;}
-      var enemy = enemies.players[key];
-      var enemyBullets = enemies.bullets[key];
-      var enemyData = data[key];
-      enemy.position.x = enemyData.x;
-      enemy.position.y = enemyData.y;
-      // console.log("About to update direction");
-      enemy.face(enemyData.dir);
-      enemy.frame = enemyData.currentFrame;
-      // enemy.animate(enemyData.isMoving)
-      // enemy.bulletInfo = enemyData.bullets
-      while (enemyBullets.length > 0) { enemyBullets.pop().destroy(); }
-
-      for (var i=0; i<enemyData.bullets.length; i++) {
-        bulletData = enemyData.bullets[i];
-        var bullet = new Bullet(game, bulletData.x, bulletData.y, enemy);
-        game.add.existing(bullet);
-        enemyBullets.push(bullet);
+      if (key === socket.clientId) {
+        handleSelf(data, key, ctx);
+      } else {
+        handleEnemy(data, key, ctx);
       }
     }
   });
@@ -72,8 +58,16 @@ socketFunctions.createPlay = function(ctx) {
 socketFunctions.updatePlay = function(ctx) {
   if (runningGrunt) { return; };
 
-  // console.log("MY BULLET:", ctx.game.bullets.children.filter(function(bullet) { return bullet.alive; })[0]);
+  var hitPlayers = [];
+  for (var enemyClientId in ctx.enemies.players) {
+    var enemy = ctx.enemies.players[enemyClientId];
+    if (enemy.visible && ctx.game.physics.arcade.overlap(ctx.game.bullets, enemy, ctx.collisionHandler, null, ctx)) {
+      var hitPlayer = { id: parseInt(enemyClientId) };
+      hitPlayers.push(hitPlayer);
+    }
+  }
 
+  // Get bullet info
   var liveBullets = ctx.game.bullets.children.filter(function(bullet) {
     return bullet.alive;
   }).map(function(bullet) {
@@ -89,8 +83,53 @@ socketFunctions.updatePlay = function(ctx) {
       direction: ctx.player1.body.direction,
       currentFrame: ctx.player1.frame
     },
-    bullets: liveBullets
+    bullets: liveBullets,
+    hitPlayers: hitPlayers
   });
+}
+
+function handleSelf(data, key, ctx) {
+  var self = ctx.player1;
+  if (data[key].status === "alive") {
+    self.visible = true;
+  } else if (data[key].status === "hit") {
+    ctx.flame.reset(self.body.x, self.body.y-100);
+    ctx.flame.animations.play('blow', 30, false, true);
+  } else {
+    self.visible = false;
+  }
+}
+
+function handleEnemy(data, key, ctx) {
+  var game = ctx.game;
+  var enemies = ctx.enemies;
+  var enemy = enemies.players[key];
+  var enemyBullets = enemies.bullets[key];
+  var enemyData = data[key];
+  enemy.position.x = enemyData.x;
+  enemy.position.y = enemyData.y;
+  // console.log("About to update direction");
+  enemy.face(enemyData.dir);
+  enemy.frame = enemyData.currentFrame;
+  // enemy.animate(enemyData.isMoving)
+  // enemy.bulletInfo = enemyData.bullets
+  while (enemyBullets.length > 0) { enemyBullets.pop().destroy(); }
+
+  for (var i=0; i<enemyData.bullets.length; i++) {
+    bulletData = enemyData.bullets[i];
+    var bullet = new Bullet(game, bulletData.x, bulletData.y, enemy);
+    game.add.existing(bullet);
+    enemyBullets.push(bullet);
+  }
+
+  if (enemyData.status === "alive") {
+    enemy.visible = true;
+  } else if (enemyData.status === "hit") {
+    ctx.flame.reset(enemy.body.x, enemy.body.y-100);
+    ctx.flame.animations.play('blow', 30, false, true);
+  } else {
+    enemy.visible = false;
+  }
 }
 
 module.exports = socketFunctions
@@ -528,11 +567,11 @@ module.exports = Menu;
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
-      this.player2 = new Player(this.game, 200, 1200, 'player', false);
+      // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
+      // this.game.add.existing(this.player2);
 
 
       //creating and adding weapon for players
@@ -588,7 +627,7 @@ module.exports = Menu;
 
 
       this.game.physics.arcade.collide(this.player1, this.ground);
-      this.game.physics.arcade.collide(this.player2, this.ground);
+      // this.game.physics.arcade.collide(this.player2, this.ground);
 
       this.game.physics.arcade.collide(this.player1, this.platforms);
 
@@ -600,8 +639,8 @@ module.exports = Menu;
       }, null, this);
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
-      this.game.physics.arcade.overlap(this.game.bullets, this.player2,
-      this.collisionHandler, null, this);
+      // this.game.physics.arcade.overlap(this.game.bullets, this.player2,
+      //   this.collisionHandler, null, this);
 
       this.game.socketFunctions.updatePlay(this);
     },
@@ -609,10 +648,10 @@ module.exports = Menu;
     collisionHandler: function(opponent, bullet){
 
       bullet.kill();
-      opponent.kill()
-      this.flame.reset(opponent.body.x-50, opponent.body.y-50);
-      this.flame.animations.play('blow', 30, false, true);
-      this.respawn(opponent);
+      // opponent.kill()
+      // this.flame.reset(opponent.body.x, opponent.body.y-100);
+      // this.flame.animations.play('blow', 30, false, true);
+      // this.respawn(opponent);
 
     },
 

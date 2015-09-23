@@ -11,17 +11,18 @@ var passport = require('passport');
 var session = require('express-session');
 
 // load passport.js
-require('./config/passport.js')(passport)
+require('./config/passport.js')(passport);
 
 // setup routes
 var routes = require('./routes/index')(express, passport);
 
+
 // connect to mongo through mongoose
-mongoose.connect(process.env.MONGO_DB_URL)
+mongoose.connect(process.env.MONGO_DB_URL);
 
 // load express
 var app = express();
-server = require('http').createServer(app),
+server = require('http').createServer(app);
 io = require('socket.io').listen(server);
 
 
@@ -73,24 +74,9 @@ io.sockets.on("connection", function(socket){
       playerMap[hitPlayerId].status = "hit";
     }
   });
-
-  socket.on("click", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("left", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("right", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("bullet", function(data){
-    console.log(data.data)
-  });
-
 });
+
+
 
 setInterval(function() {
   io.emit("updateAll", playerMap);
@@ -111,13 +97,12 @@ function checkPlayer(player) {
 }
 
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -125,6 +110,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+// app.use('/game', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

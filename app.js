@@ -19,7 +19,7 @@ io.sockets.on("connection", function(socket){
   console.log("socket connected");
   socket.clientId = nextClientId;
   nextClientId++;
-  playerMap[socket.clientId] = {x:0, y:0, dir:"right", isMoving:false};
+  playerMap[socket.clientId] = {x:0, y:0, dir:"right", isMoving:false, status:"alive"};
   // console.log("added", socket.clientId, "to playerMap");
 
   socket.emit("setup",
@@ -43,12 +43,16 @@ io.sockets.on("connection", function(socket){
   });
 
   socket.on("update", function(clientData){
-    var serverData  = playerMap[socket.clientId];
-    serverData.x    = clientData.player.position.x;
-    serverData.y    = clientData.player.position.y;
-    serverData.dir  = clientData.player.direction;
-    serverData.currentFrame = clientData.player.currentFrame;
-    serverData.bullets = clientData.bullets;
+    var serverPlayer  = playerMap[socket.clientId];
+    serverPlayer.x    = clientData.player.position.x;
+    serverPlayer.y    = clientData.player.position.y;
+    serverPlayer.dir  = clientData.player.direction;
+    serverPlayer.currentFrame = clientData.player.currentFrame;
+    serverPlayer.bullets = clientData.bullets;
+    for (var i in clientData.hitPlayers) {
+      var hitPlayerId = clientData.hitPlayers[i].id;
+      playerMap[hitPlayerId].status = "hit";
+    }
   });
 
   socket.on("click", function(data){
@@ -71,10 +75,21 @@ io.sockets.on("connection", function(socket){
 
 setInterval(function() {
   io.emit("updateAll", playerMap);
+  for (var key in playerMap) {
+    checkPlayer(playerMap[key]);
+  }
 }, 1000 / 30);
 // }, 1000 / 1);
 
-
+function checkPlayer(player) {
+  if (player.status === "hit") {
+    player.status = "dead";
+    setTimeout(function() {
+      player.status = "alive";
+      // console.log("P KEY:", key);
+    }, 1000);
+  }
+}
 
 
 

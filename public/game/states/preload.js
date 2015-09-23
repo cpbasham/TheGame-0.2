@@ -30,6 +30,9 @@ Preload.prototype = {
     this.load.atlasJSONHash('player3', '../assets/players/soldier3.png', '../assets/players/soldier3.json');
     this.load.atlasJSONHash('player4', '../assets/players/soldier4.png', '../assets/players/soldier4.json');
 
+    //loading bullets
+    this.load.atlasJSONHash('orangespin', '../assets/bullets/orangespin.png', '../assets/bullets/orangespin.json');
+    this.load.atlasJSONHash('groundexp', '../assets/bullets/groundexp.png', '../assets/bullets/orangespin.json');
   },
   create: function() {
     this.asset.cropEnabled = false;

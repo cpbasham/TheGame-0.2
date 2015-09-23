@@ -1,9 +1,9 @@
 'use strict';
 
-var platform1;
+
 
 var Platform = function(game, x, y, width, height) {
-  Phaser.Sprite.call(this, game, x, y, 'ground');
+  Phaser.Sprite.call(this, game, x, y, 'platformLarge');
 
   this.game.physics.arcade.enable(this, Phaser.Physics.ARCADE);
 

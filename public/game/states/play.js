@@ -19,13 +19,23 @@
       this.background = this.game.add.sprite(0, 0, 'background');
 
       //creating players
-      this.player1 = new Player(this.game, 100, 100, 'player', true);
+      this.player1 = new Player(this.game, 3100, 100, 'player', true);
       // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
 
+      //platforms
+      this.platforms = this.game.add.physicsGroup();
+      this.platforms.create(1398, 355, 'platformLarge');
+      this.platforms.create(500, 225, 'platformSmall');
+      this.platforms.create(200, 600, 'platformSmall');
+      this.platforms.create(3000, 225, 'platformSmall');
+      this.platforms.create(3334, 749, 'platformSmall');
+
+      this.platforms.setAll('body.allowGravity', false);
+      this.platforms.setAll('body.immovable', true);
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
@@ -40,20 +50,17 @@
 
 
       //ground
-      this.ground = new Ground(this.game, 0, 1322, 300, 213);
+      this.ground = new Ground(this.game, 0, 982, 4096, 41);
       this.game.add.existing(this.ground);
 
 
-      // this.groundtest = new Ground(this.game, 0, 1000, 1300, 1213);
-      // this.game.add.existing(this.groundtest);
 
-      //platforms
-      this.platforms = this.game.add.physicsGroup();
-      this.platforms.create(100, 1200, 'ground');
-      this.platforms.create(100, 100, 'ground');
-      this.platforms.create(200, 200, 'ground');
-      this.platforms.setAll('body.allowGravity', false);
-      this.platforms.setAll('body.immovable', true);
+
+
+
+      // this.platforms.create(100, 1200, 'ground');
+      // this.platforms.create(100, 100, 'ground');
+      // this.platforms.create(200, 200, 'ground');
       // this.platforms.setAll('body.velocity.x', 100);
 
 

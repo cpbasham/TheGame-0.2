@@ -1,15 +1,34 @@
+require('dotenv').load();
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var session = require('express-session');
 
-var routes = require('./routes/index');
+// load passport.js
+require('./config/passport.js')(passport)
 
+// setup routes
+var routes = require('./routes/index')(express, passport);
+
+// connect to mongo through mongoose
+mongoose.connect(process.env.MONGO_DB_URL)
+
+// load express
 var app = express();
-    server = require('http').createServer(app),
-    io = require('socket.io').listen(server);
+server = require('http').createServer(app),
+io = require('socket.io').listen(server);
+
+
+// required for passport
+app.use(session({ secret: process.env.SESSION_SECRET }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 server.listen(4000);
 

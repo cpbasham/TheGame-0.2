@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var runningGrunt = true;
+var runningGrunt = false;
 
 var Player = require("../prefabs/player.js");
 var Bullet = require("../prefabs/bullet.js");
@@ -146,7 +146,7 @@ window.onload = function () {
   game.state.add('menu', require('./states/menu'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
-  
+
 
   game.state.start('boot');
 };
@@ -159,24 +159,19 @@ var bullets;
 var fireRate = 100;
 var nextFire = 0;
 
-
-
 var Bullet = function(game, x, y, player) {
-  Phaser.Sprite.call(this, game, x, y, 'bullet');
-
+  Phaser.Sprite.call(this, game, x, y, 'orangespin');
 
   this.game.bullets.add(this);
+  this.animations.add('spin',[0,1, 2, 3, 4, 5, 6, 7, 8, 9], 60, true);
   this.alive = true;
   //this.game.physics.startSystem(Phaser.Physics.ARCADE);
   this.player = player
   this.game.physics.arcade.enableBody(this);
-
   // player.body.allowRotation = false;
-
   this.checkWorldBounds = true;
   this.outOfBoundsKill = true;
   this.body.collideWorldBounds = true;
-
 
 };
 
@@ -188,12 +183,24 @@ Bullet.prototype.update = function(){
   if (this.game.input.activePointer.isDown) {
     if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0) {
       nextFire = this.game.time.now + fireRate;
-
       var bullet = this.game.bullets.getFirstDead();
 
-      bullet.reset(this.player.x, this.player.y);
+      //animate when fire(click)
+      bullet.animations.add('spin');
 
-      this.game.physics.arcade.moveToPointer(bullet, 1000);
+      console.log(this.player.body.direction);
+      bullet.animations.play('spin', 60, true);
+
+      if (this.player.body.direction === 'left'){
+        bullet.reset(this.player.x - 225, this.player.y + 40);
+       }else if (this.player.body.direction === 'right'){
+        bullet.reset(this.player.x + 150, this.player.y + 40);
+       };
+      //bullet.anchor.setTo(this.player.x, this.player.y);
+
+      //bullet.reset(this.player.x+ 150, this.player.y -25);
+
+      this.game.physics.arcade.moveToPointer(bullet, 500);
      }
   };
 
@@ -306,38 +313,28 @@ module.exports = Platform;
 
 var cursors;
 
-var Player = function(game, x, y, playerName, controllable, frame) {
-  Phaser.Sprite.call(this, game, x, y, playerName, controllable, frame);
+var Player = function(game, x, y, player, controllable, frame) {
+  Phaser.Sprite.call(this, game, x, y, player, controllable, frame);
 
   this.game.physics.enable(this, Phaser.Physics.ARCADE);
   this.game.add.existing(this);
 
-
   this.game.allowGravity;
-
   this.anchor.setTo(0.5, 0.5);
-  // this.scale.setTo(0.5, 0.5);
 
-  this.animations.add('run');
-  this.animations.play('run', 15, true);
-
-  this.animations.add('left',[0,1,2], 10, true);
-  this.animations.add('right',[3,4,5], 10, true);
-  //this.animations.add('jump',[], 10, true);
-  //this.animations.add('shoot'[] 10, true);
+  this.animations.add('happy',[1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true);
+  this.animations.add('hurt',[11, 12, 13, 14, 15, 16, 17, 18, 19], 10, true);
+  this.animations.add('jumpshoot',[20, 21, 22, 23, 24, 25, 26, 27, 28, 29], 10, true);
+  this.animations.add('jump',[30, 31, 32, 33, 34, 35, 36, 37, 38, 39], 10, true);
+  this.animations.add('melee',[40, 41, 42, 43, 44, 45, 46, 47, 48, 49], 10, true);
+  this.animations.add('left',[50, 51, 52, 53, 54, 55, 56, 57, 58, 59], 10, true);//runshoot
+  this.animations.add('right',[50, 51, 52, 53, 54, 55, 56, 57, 58, 59], 10, true);//runshoot
+  this.animations.add('run',[60, 61, 62, 63, 64, 65, 66, 67, 68, 69], 10, true);
+  this.animations.add('shoot',[70, 71, 72, 73, 74, 75, 76, 77, 78, 79], 10, true);
+  // this.animations.add('throw',[80, 81, 82, 83, 84, 85, 86, 87, 88, 89], 10, true);
 
   this.game.physics.arcade.enableBody(this);
   this.body.collideWorldBounds = true;
-  // this.face("right");
-  this.animate(false);
-
-  // halo = this.add.sprite(0, 0, 'bullet');
-  // this.halo.anchor.setTo(3, 3);
-  // this.game.addChild(this.halo);
-  // this.physics.enable(this.halo, Phaser.Physics.ARCADE);
-
-  // this.checkWorldBounds = true;
-  // this.outOfBoundsKill = true;
 
   var game = this.game;
   var ctx = this;
@@ -369,7 +366,6 @@ Player.prototype.animate = function(moving) {
     this.animations.stop();
     this.frame = 0;
   }
-
 }
 
 Player.prototype.setCollision = function(state) {
@@ -381,12 +377,8 @@ Player.prototype.update = function() {
   console.log(this.body.velocity, this.yolo);
 
   this.game.physics.arcade.enable(this);
-
-
   cursors = this.game.input.keyboard.createCursorKeys();
-
-
-  this.body.gravity.y = 750;
+  this.body.gravity.y = 500;
   this.body.velocity.x = 0;
 
   if (cursors.left.isDown) {
@@ -396,13 +388,12 @@ Player.prototype.update = function() {
     this.face("right");
     this.animate(true);
   } else {
-    this.animate(false);
+    this.animations.play('shoot', 15, false);
   }
-
   console.log(cursors.up.isDown);
 
   if (cursors.up.isDown && this.yolo) {
-    // debugger;
+
     this.body.position.y -= 1;
     this.body.velocity.y = -450;
   }
@@ -432,7 +423,6 @@ Boot.prototype = {
     this.game.input.maxPointers = 1;
 
     this.game.world.setBounds(0, 0, 4096, 1023);
-    
 
     // ARCADE physics
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -575,19 +565,22 @@ module.exports = Menu;
 
 
       //creating players
-      this.player1 = new Player(this.game, 3100, 100, 'player', true);
+      this.player1 = new Player(this.game, 450, 100,  'player1', true);
+      this.player2 = new Player(this.game, 200, 100, 'player2', false);
+      this.player3 = new Player(this.game, 300, 100,  'player3', false);
+      this.player4 = new Player(this.game, 400, 100, 'player4', false);
 
       //text above player sprite
       this.player1.inputEnabled = true;
       var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.player1.width, align: "center" };
       text = this.game.add.text(0, 0, "YOLO", style);
       text.anchor.set(0.5);
-      // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      // this.game.add.existing(this.player2);
-
+      this.game.add.existing(this.player2);
+      this.game.add.existing(this.player3);
+      this.game.add.existing(this.player4);
 
       //platforms
       this.platforms = this.game.add.physicsGroup();
@@ -611,29 +604,35 @@ module.exports = Menu;
       this.platforms.setAll('body.allowGravity', false);
       this.platforms.setAll('body.immovable', true);
 
-
-
-
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
       this.game.bullets.enableBody = true;
       this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-      this.game.bullets.createMultiple(1, 'bullet');
+      this.game.bullets.createMultiple(3, 'orangespin');
       this.game.bullets.setAll('checkWorldBounds', true);
       this.game.bullets.setAll('outOfBoundsKill', true);
 
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
-      this.game.add.existing(this.bullet1);
+      //this.game.add.existing(this.bullet1);
 
+      //ground
+      // this.ground = new Ground(this.game, 0, 1322, 300, 213);
+      // this.game.add.existing(this.ground);
+
+      // this.groundtest = new Ground(this.game, 0, 1000, 1300, 1213);
+      // this.game.add.existing(this.groundtest);
+
+      //platforms
+      // this.platforms = this.game.add.physicsGroup();
+      // this.platforms.create(100, 1200, 'ground');
+      // this.platforms.create(100, 100, 'ground');
+      // this.platforms.create(200, 200, 'ground');
+      // this.platforms.setAll('body.allowGravity', false);
+      // this.platforms.setAll('body.immovable', true);
 
       //ground
       this.ground = new Ground(this.game, 0, 982, 4096, 41);
       this.game.add.existing(this.ground);
-
-
-
-
-
 
       // this.platforms.create(100, 1200, 'ground');
       // this.platforms.create(100, 100, 'ground');
@@ -641,17 +640,22 @@ module.exports = Menu;
       // this.platforms.setAll('body.velocity.x', 100);
 
 
-      //camera following player one
+      //camera following player
       this.game.camera.follow(this.player1);
 
+      //explsions
       this.flame = this.game.add.sprite(0, 0, 'kaboom');
       this.flame.scale.setTo(1.5, 1.5);
       this.blow = this.flame.animations.add('blow');
+
+      this.groundexplosion = this.game.add.sprite(0, 0, 'groundexp');
+      this.boom = this.groundexplosion.animations.add('boom')
 
       this.game.socketFunctions.createPlay(this);
     },
     update: function() {
 
+      //player 1
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
         this.player1.setCollision(true);
       } else if (this.game.physics.arcade.collide(this.player1, this.platforms)) {
@@ -662,14 +666,13 @@ module.exports = Menu;
 
       // this.game.physics.arcade.collide(this.player1, this.groundtest);
 
-
       this.game.physics.arcade.collide(this.player1, this.ground);
+      this.game.physics.arcade.collide(this.player2, this.ground);
+      this.game.physics.arcade.collide(this.player1, this.platforms);
       // this.game.physics.arcade.collide(this.player2, this.ground);
-
       this.game.physics.arcade.collide(this.player1, this.platforms);
 
       this.game.physics.arcade.collide(this.bullet1, this.ground);
-
       this.game.physics.arcade.overlap(this.game.bullets, this.ground,
       function(ground, bullet) {
         bullet.kill();
@@ -690,10 +693,10 @@ module.exports = Menu;
     collisionHandler: function(opponent, bullet){
 
       bullet.kill();
-      // opponent.kill()
-      // this.flame.reset(opponent.body.x, opponent.body.y-100);
-      // this.flame.animations.play('blow', 30, false, true);
-      // this.respawn(opponent);
+      opponent.kill()
+      this.flame.reset(opponent.body.x, opponent.body.y-100);
+      this.flame.animations.play('blow', 30, false, true);
+      this.respawn(opponent);
 
     },
 
@@ -735,6 +738,10 @@ Preload.prototype = {
 
     //load game assets: (OLD)
     this.load.image('startButton', 'assets/images/start-button.png');
+    this.load.image('background', 'assets/gameimages/background/bg.png');
+    //this.load.image('ground', 'assets/images/ground.png');
+    this.load.image('ground1', 'assets/images/ground1.png');  //tried to crop out clear space
+    this.load.image('floor', 'assets/images/floor.png');
     this.load.image('backgroundOld', 'assets/images/background.png');
     this.load.image('groundOld', 'assets/images/ground.png');
     this.load.image('ground1Old', 'assets/images/ground1.png');  //tried to crop out clear space
@@ -742,12 +749,16 @@ Preload.prototype = {
     this.load.spritesheet('kaboom', '../assets/images/explode.png', 128, 128);
     this.load.spritesheet('explosion', '../assets/images/explosion1.png', 200, 141, 11);
     this.load.spritesheet('bullet', 'assets/images/bird.png', 34, 24, 1);
-    this.load.spritesheet('player', 'assets/images/running100x141.png', 100, 141, 6);
 
-    // this.load.tilemap('level1', 'assets/tilemaps/testmap.json', null, Phaser.Tilemap.TILED_JSON);
-    // this.load.image('tiles', 'assets/images/testmap.png');
+    //loading players
+    this.load.atlasJSONHash('player1', '../assets/players/soldier1.png', '../assets/players/soldier1.json');
+    this.load.atlasJSONHash('player2', '../assets/players/soldier2.png', '../assets/players/soldier2.json');
+    this.load.atlasJSONHash('player3', '../assets/players/soldier3.png', '../assets/players/soldier3.json');
+    this.load.atlasJSONHash('player4', '../assets/players/soldier4.png', '../assets/players/soldier4.json');
 
-    this.load.spritesheet('enemy', 'assets/images/enemy.png', 193, 178, 9);
+    //loading bullets
+    this.load.atlasJSONHash('orangespin', '../assets/bullets/orangespin.png', '../assets/bullets/orangespin.json');
+    this.load.atlasJSONHash('groundexp', '../assets/bullets/groundexp.png', '../assets/bullets/orangespin.json');
   },
   create: function() {
     this.asset.cropEnabled = false;

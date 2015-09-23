@@ -1,17 +1,43 @@
+require('dotenv').load();
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var session = require('express-session');
 
-var routes = require('./routes/index');
 
+// load passport.js
+require('./config/passport.js')(passport);
+
+// setup routes
+var routes = require('./routes/index')(express, passport);
+
+
+// connect to mongo through mongoose
+mongoose.connect(process.env.MONGO_DB_URL);
+
+// load express
 var app = express();
-    server = require('http').createServer(app),
-    io = require('socket.io').listen(server);
+server = require('http').createServer(app);
+io = require('socket.io').listen(server);
 
-server.listen(4000);
+
+// required for passport
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+server.listen(8080);
 
 var nextClientId = 0;
 var playerMap = {};
@@ -54,24 +80,9 @@ io.sockets.on("connection", function(socket){
       playerMap[hitPlayerId].status = "hit";
     }
   });
-
-  socket.on("click", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("left", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("right", function(data){
-    console.log(data.data)
-  });
-
-  socket.on("bullet", function(data){
-    console.log(data.data)
-  });
-
 });
+
+
 
 setInterval(function() {
   io.emit("updateAll", playerMap);
@@ -92,13 +103,12 @@ function checkPlayer(player) {
 }
 
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -106,6 +116,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+// app.use('/game', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

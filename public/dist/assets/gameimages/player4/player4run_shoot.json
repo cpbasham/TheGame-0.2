@@ -1,0 +1,92 @@
+{"frames": {
+
+"Run_Shoot__000.png":
+{
+	"frame": {"x":1059,"y":2,"w":162,"h":186},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":31,"y":6,"w":162,"h":186},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__001.png":
+{
+	"frame": {"x":2,"y":2,"w":175,"h":195},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":5,"w":175,"h":195},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__002.png":
+{
+	"frame": {"x":340,"y":2,"w":180,"h":192},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":4,"w":180,"h":192},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__003.png":
+{
+	"frame": {"x":1385,"y":2,"w":192,"h":183},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":4,"w":192,"h":183},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__004.png":
+{
+	"frame": {"x":522,"y":2,"w":190,"h":188},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":5,"w":190,"h":188},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__005.png":
+{
+	"frame": {"x":714,"y":2,"w":163,"h":187},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":6,"w":163,"h":187},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__006.png":
+{
+	"frame": {"x":179,"y":2,"w":159,"h":194},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":34,"y":5,"w":159,"h":194},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__007.png":
+{
+	"frame": {"x":1223,"y":2,"w":160,"h":186},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":4,"w":160,"h":186},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__008.png":
+{
+	"frame": {"x":1579,"y":2,"w":164,"h":176},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":4,"w":164,"h":176},
+	"sourceSize": {"w":193,"h":200}
+},
+"Run_Shoot__009.png":
+{
+	"frame": {"x":879,"y":2,"w":178,"h":186},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":5,"w":178,"h":186},
+	"sourceSize": {"w":193,"h":200}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player4run_shoot.png",
+	"format": "RGBA8888",
+	"size": {"w":1745,"h":199},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:35bd4dbf35afd8627ed9297711e9536e:eb961c5cb6d6d809a839721c71713b9e:021ab62acec87d1d390080c15d4825af$"
+}
+}

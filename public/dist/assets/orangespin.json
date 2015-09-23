@@ -1,0 +1,92 @@
+{"frames": {
+
+"OrangeSpin__000.png":
+{
+	"frame": {"x":2,"y":85,"w":82,"h":37},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":29,"w":82,"h":37},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__001.png":
+{
+	"frame": {"x":193,"y":64,"w":72,"h":59},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":17,"w":72,"h":59},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__002.png":
+{
+	"frame": {"x":50,"y":2,"w":45,"h":81},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":5,"w":45,"h":81},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__003.png":
+{
+	"frame": {"x":97,"y":2,"w":46,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":5,"w":46,"h":80},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__004.png":
+{
+	"frame": {"x":267,"y":2,"w":73,"h":59},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":16,"w":73,"h":59},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__005.png":
+{
+	"frame": {"x":86,"y":85,"w":82,"h":37},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":28,"w":82,"h":37},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__006.png":
+{
+	"frame": {"x":193,"y":2,"w":72,"h":60},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":17,"w":72,"h":60},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__007.png":
+{
+	"frame": {"x":2,"y":2,"w":46,"h":81},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":8,"w":46,"h":81},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__008.png":
+{
+	"frame": {"x":145,"y":2,"w":46,"h":80},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":9,"w":46,"h":80},
+	"sourceSize": {"w":91,"h":93}
+},
+"OrangeSpin__009.png":
+{
+	"frame": {"x":267,"y":63,"w":72,"h":60},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":18,"w":72,"h":60},
+	"sourceSize": {"w":91,"h":93}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "orangespin.png",
+	"format": "RGBA8888",
+	"size": {"w":342,"h":125},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d2ed01a6ecc889a3ab4086b47d5d6ced:76961cc447eb8c23bc565e33888985dd:7f714e3b3a00638e82eeb3e0a1123e14$"
+}
+}

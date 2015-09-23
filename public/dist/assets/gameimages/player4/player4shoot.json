@@ -1,0 +1,92 @@
+{"frames": {
+
+"Shoot__000.png":
+{
+	"frame": {"x":176,"y":2,"w":171,"h":199},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":1,"w":171,"h":199},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__001.png":
+{
+	"frame": {"x":2,"y":2,"w":172,"h":199},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":172,"h":199},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__002.png":
+{
+	"frame": {"x":349,"y":2,"w":171,"h":199},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":171,"h":199},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__003.png":
+{
+	"frame": {"x":522,"y":2,"w":172,"h":198},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":2,"w":172,"h":198},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__004.png":
+{
+	"frame": {"x":696,"y":2,"w":171,"h":198},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":2,"w":171,"h":198},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__005.png":
+{
+	"frame": {"x":869,"y":2,"w":169,"h":197},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":3,"w":169,"h":197},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__006.png":
+{
+	"frame": {"x":696,"y":2,"w":171,"h":198},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":2,"w":171,"h":198},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__007.png":
+{
+	"frame": {"x":522,"y":2,"w":172,"h":198},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":2,"w":172,"h":198},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__008.png":
+{
+	"frame": {"x":349,"y":2,"w":171,"h":199},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":171,"h":199},
+	"sourceSize": {"w":174,"h":200}
+},
+"Shoot__009.png":
+{
+	"frame": {"x":2,"y":2,"w":172,"h":199},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":172,"h":199},
+	"sourceSize": {"w":174,"h":200}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player4shoot.png",
+	"format": "RGBA8888",
+	"size": {"w":1040,"h":203},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:754b253abc74a8f198a5e9c6a9b5c181:de6a8f7374741d99e1739b0bee01c375:2245baaa1644f2e0c4b2137d0609a279$"
+}
+}

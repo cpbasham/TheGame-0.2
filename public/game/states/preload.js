@@ -23,6 +23,10 @@ Preload.prototype = {
 
     //load game assets: (OLD)
     this.load.image('startButton', 'assets/images/start-button.png');
+    this.load.image('background', 'assets/gameimages/background/bg.png');
+    //this.load.image('ground', 'assets/images/ground.png');
+    this.load.image('ground1', 'assets/images/ground1.png');  //tried to crop out clear space
+    this.load.image('floor', 'assets/images/floor.png');
     this.load.image('backgroundOld', 'assets/images/background.png');
     this.load.image('groundOld', 'assets/images/ground.png');
     this.load.image('ground1Old', 'assets/images/ground1.png');  //tried to crop out clear space
@@ -30,12 +34,16 @@ Preload.prototype = {
     this.load.spritesheet('kaboom', '../assets/images/explode.png', 128, 128);
     this.load.spritesheet('explosion', '../assets/images/explosion1.png', 200, 141, 11);
     this.load.spritesheet('bullet', 'assets/images/bird.png', 34, 24, 1);
-    this.load.spritesheet('player', 'assets/images/running100x141.png', 100, 141, 6);
 
-    // this.load.tilemap('level1', 'assets/tilemaps/testmap.json', null, Phaser.Tilemap.TILED_JSON);
-    // this.load.image('tiles', 'assets/images/testmap.png');
+    //loading players
+    this.load.atlasJSONHash('player1', '../assets/players/soldier1.png', '../assets/players/soldier1.json');
+    this.load.atlasJSONHash('player2', '../assets/players/soldier2.png', '../assets/players/soldier2.json');
+    this.load.atlasJSONHash('player3', '../assets/players/soldier3.png', '../assets/players/soldier3.json');
+    this.load.atlasJSONHash('player4', '../assets/players/soldier4.png', '../assets/players/soldier4.json');
 
-    this.load.spritesheet('enemy', 'assets/images/enemy.png', 193, 178, 9);
+    //loading bullets
+    this.load.atlasJSONHash('orangespin', '../assets/bullets/orangespin.png', '../assets/bullets/orangespin.json');
+    this.load.atlasJSONHash('groundexp', '../assets/bullets/groundexp.png', '../assets/bullets/orangespin.json');
   },
   create: function() {
     this.asset.cropEnabled = false;

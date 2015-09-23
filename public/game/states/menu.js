@@ -16,7 +16,7 @@ Menu.prototype = {
     var text = this.add.text(this.game.width * 0.5, this.game.height * 0.5, 'YOLO', {font: '42px Arial', fill: '#fff', align: 'center'});
     text.anchor.set(0.5);
 
-    this.ground = this.game.add.tileSprite(240, 500, 335, 112, 'ground');
+    this.ground = this.game.add.tileSprite(240, 500, 335, 112, 'groundOld');
 
     this.ground.autoScroll(-200, 0);
 

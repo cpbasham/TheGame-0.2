@@ -14,7 +14,7 @@ module.exports = function(express,passport){
   router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
   router.get('/auth/google/callback',
     passport.authenticate('google', {
-      successRedirect : '/thegame',
+      successRedirect : '/rooms',
       failureRedirect : '/'
     })
   );
@@ -23,13 +23,17 @@ module.exports = function(express,passport){
   router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-      successRedirect : '/thegame',
+      successRedirect : '/rooms',
       failureRedirect : '/'
     })
   );
 
   router.get('/thegame', function(req,res){
     res.render('game', {title: 'DA GAME', user: req.user});
+  });
+
+    router.get('/rooms', function(req,res){
+    res.render('rooms', {title: 'Room View', user: req.user});
   });
 
   function isLoggedIn(req, res, next) {

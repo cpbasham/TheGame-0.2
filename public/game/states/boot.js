@@ -8,6 +8,7 @@ function Boot() {
 Boot.prototype = {
   preload: function() {
     this.load.image('preloader', 'assets/preloader.gif');
+    this.game.stage.disableVisibilityChange = true;
   },
   create: function() {
     this.game.stage.backgroundColor = '#fff';

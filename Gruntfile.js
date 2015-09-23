@@ -14,7 +14,7 @@ var mountFolder = function (connect, dir) {
 };
 
 module.exports = function (grunt) {
-  var runGruntServer = true;
+  var runGruntServer = false;
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 

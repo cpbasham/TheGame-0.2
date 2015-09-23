@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var session = require('express-session');
 
+
 // load passport.js
 require('./config/passport.js')(passport);
 

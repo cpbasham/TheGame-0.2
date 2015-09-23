@@ -8,6 +8,7 @@ function Boot() {
 Boot.prototype = {
   preload: function() {
     this.load.image('preloader', 'assets/preloader.gif');
+    this.game.stage.disableVisibilityChange = true;
   },
   create: function() {
     this.game.stage.backgroundColor = '#fff';
@@ -17,7 +18,7 @@ Boot.prototype = {
 
     this.game.input.maxPointers = 1;
 
-    this.game.world.setBounds(0, 0, 4000, 1536);
+    this.game.world.setBounds(0, 0, 4096, 1023);
 
     // ARCADE physics
     this.game.physics.startSystem(Phaser.Physics.ARCADE);

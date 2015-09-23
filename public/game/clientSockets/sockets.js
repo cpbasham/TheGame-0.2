@@ -1,4 +1,4 @@
-var runningGrunt = false;
+var runningGrunt = true;
 
 var Player = require("../prefabs/player.js");
 var Bullet = require("../prefabs/bullet.js");

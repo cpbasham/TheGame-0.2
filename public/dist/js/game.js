@@ -575,9 +575,6 @@ module.exports = Menu;
 
 
       //creating players
-<<<<<<< HEAD
-      this.player1 = new Player(this.game, 100, 100, 'player', true);
-=======
       this.player1 = new Player(this.game, 3100, 100, 'player', true);
 
       //text above player sprite
@@ -585,14 +582,11 @@ module.exports = Menu;
       var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.player1.width, align: "center" };
       text = this.game.add.text(0, 0, "YOLO", style);
       text.anchor.set(0.5);
->>>>>>> e25a59315d6d91185a1d8d673d895f8365636082
       // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
-<<<<<<< HEAD
-=======
 
 
       //platforms
@@ -618,7 +612,6 @@ module.exports = Menu;
       this.platforms.setAll('body.immovable', true);
 
 
->>>>>>> e25a59315d6d91185a1d8d673d895f8365636082
 
 
       //creating and adding weapon for players

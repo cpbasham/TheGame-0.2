@@ -11,10 +11,6 @@ var passport = require('passport');
 var session = require('express-session');
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e25a59315d6d91185a1d8d673d895f8365636082
 // load passport.js
 require('./config/passport.js')(passport);
 

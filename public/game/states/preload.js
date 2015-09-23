@@ -47,6 +47,10 @@ Preload.prototype = {
   },
   create: function() {
     this.asset.cropEnabled = false;
+
+
+
+
   },
   update: function() {
     if(!!this.ready) {

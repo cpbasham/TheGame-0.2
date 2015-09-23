@@ -63,7 +63,7 @@ Player.prototype.setCollision = function(state) {
 
 Player.prototype.update = function() {
 
-  console.log(this.body.velocity, this.yolo);
+  // console.log(this.body.velocity, this.yolo);
 
   this.game.physics.arcade.enable(this);
   cursors = this.game.input.keyboard.createCursorKeys();
@@ -79,7 +79,7 @@ Player.prototype.update = function() {
   } else {
     this.animations.play('shoot', 15, false);
   }
-  console.log(cursors.up.isDown);
+  // console.log(cursors.up.isDown);
 
   if (cursors.up.isDown && this.yolo) {
 

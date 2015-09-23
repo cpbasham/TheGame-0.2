@@ -13,6 +13,18 @@
   Play.prototype = {
     create: function() {
 
+      this.game.input.onDown.add(gofull, this)
+
+      function gofull() {
+        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.game.scale.startFullScreen();
+
+      };
+
+     // this.game.scale.enterFullScreen();
+
+    this.stage.backgroundColor = "#000"
+
       this.enemies = {players: {}, bullets: {}};
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -110,6 +122,8 @@
       this.game.socketFunctions.createPlay(this);
     },
     update: function() {
+
+
 
       //player 1
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {

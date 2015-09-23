@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var runningGrunt = false;
+var runningGrunt = true;
 
 var Player = require("../prefabs/player.js");
 var Bullet = require("../prefabs/bullet.js");
@@ -146,7 +146,7 @@ window.onload = function () {
   game.state.add('menu', require('./states/menu'));
   game.state.add('play', require('./states/play'));
   game.state.add('preload', require('./states/preload'));
-
+  
 
   game.state.start('boot');
 };
@@ -374,7 +374,7 @@ Player.prototype.setCollision = function(state) {
 
 Player.prototype.update = function() {
 
-  console.log(this.body.velocity, this.yolo);
+  // console.log(this.body.velocity, this.yolo);
 
   this.game.physics.arcade.enable(this);
   cursors = this.game.input.keyboard.createCursorKeys();
@@ -390,7 +390,7 @@ Player.prototype.update = function() {
   } else {
     this.animations.play('shoot', 15, false);
   }
-  console.log(cursors.up.isDown);
+  // console.log(cursors.up.isDown);
 
   if (cursors.up.isDown && this.yolo) {
 
@@ -413,12 +413,15 @@ function Boot() {
 Boot.prototype = {
   preload: function() {
     this.load.image('preloader', 'assets/preloader.gif');
+    this.game.stage.disableVisibilityChange = true;
   },
   create: function() {
     this.game.stage.backgroundColor = '#fff';
 
     //scaling options
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+
+    // this.game.scale.startFullScreen(true);
 
     this.game.input.maxPointers = 1;
 
@@ -427,18 +430,18 @@ Boot.prototype = {
     // ARCADE physics
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    if (this.game.device.desktop) {
-      this.game.scale.pageAlignHorizontally = true;
-    } else {
-      this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-      this.game.scale.minWidth =  480;
-      this.game.scale.minHeight = 260;
-      this.game.scale.maxWidth = 640;
-      this.game.scale.maxHeight = 480;
-      this.game.scale.forceOrientation(true);
-      this.game.scale.pageAlignHorizontally = true;
-      this.game.scale.setScreenSize(true);
-    }
+    // if (this.game.device.desktop) {
+    //   this.game.scale.pageAlignHorizontally = true;
+    // } else {
+    //   this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    //   this.game.scale.minWidth =  480;
+    //   this.game.scale.minHeight = 260;
+    //   this.game.scale.maxWidth = 640;
+    //   this.game.scale.maxHeight = 480;
+    //   this.game.scale.forceOrientation(true);
+    //   this.game.scale.pageAlignHorizontally = true;
+    //   this.game.scale.setScreenSize(true);
+    // }
 
     this.game.state.start('preload');
   }
@@ -557,6 +560,18 @@ module.exports = Menu;
   Play.prototype = {
     create: function() {
 
+      this.game.input.onDown.add(gofull, this)
+
+      function gofull() {
+        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.game.scale.startFullScreen();
+
+      };
+
+     // this.game.scale.enterFullScreen();
+
+    this.stage.backgroundColor = "#000"
+
       this.enemies = {players: {}, bullets: {}};
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -654,6 +669,8 @@ module.exports = Menu;
       this.game.socketFunctions.createPlay(this);
     },
     update: function() {
+
+
 
       //player 1
       if (this.game.physics.arcade.collide(this.player1, this.ground)) {
@@ -762,6 +779,10 @@ Preload.prototype = {
   },
   create: function() {
     this.asset.cropEnabled = false;
+
+
+
+
   },
   update: function() {
     if(!!this.ready) {

@@ -7,8 +7,6 @@
   var Bullet = require('../prefabs/bullet');
   var Platform = require('../prefabs/platform');
 
-
-
   function Play() {}
 
   Play.prototype = {
@@ -20,8 +18,6 @@
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
-      console.log(this.game)
-
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
       this.player2 = new Player(this.game, 200, 1200, 'player', false);
@@ -30,21 +26,24 @@
       this.game.add.existing(this.player1);
       this.game.add.existing(this.player2);
 
+
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();
       this.game.bullets.enableBody = true;
       this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
       this.game.bullets.createMultiple(1, 'bullet');
-      this.game.bullets.setAll('checkWorldBounds', true);
-      this.game.bullets.setAll('outOfBoundsKill', true);
 
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);
-      // debugger;
+
 
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
       this.game.add.existing(this.ground);
+
+
+      // this.groundtest = new Ground(this.game, 0, 1000, 1300, 1213);
+      // this.game.add.existing(this.groundtest);
 
       //platforms
       this.platforms = this.game.add.physicsGroup();
@@ -75,12 +74,14 @@
         this.player1.setCollision(false);
       };
 
+      // this.game.physics.arcade.collide(this.player1, this.groundtest);
+
+
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
 
       this.game.physics.arcade.collide(this.player1, this.platforms);
 
-      // debugger;
       this.game.physics.arcade.collide(this.bullet1, this.ground);
 
       this.game.physics.arcade.overlap(this.game.bullets, this.ground,
@@ -99,7 +100,7 @@
 
       bullet.kill();
       opponent.kill()
-      this.flame.reset(opponent.body.x, opponent.body.y-100);
+      this.flame.reset(opponent.body.x-50, opponent.body.y-50);
       this.flame.animations.play('blow', 30, false, true);
       this.respawn(opponent);
 

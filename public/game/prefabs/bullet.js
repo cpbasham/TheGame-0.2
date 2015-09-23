@@ -12,43 +12,38 @@ var Bullet = function(game, x, y, player) {
 
 
   this.game.bullets.add(this);
+  this.alive = true;
   //this.game.physics.startSystem(Phaser.Physics.ARCADE);
   this.player = player
   this.game.physics.arcade.enableBody(this);
 
   // player.body.allowRotation = false;
 
-
+  this.checkWorldBounds = true;
+  this.outOfBoundsKill = true;
   this.body.collideWorldBounds = true;
+
+
 };
 
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
 Bullet.prototype.constructor = Bullet;
 
-Bullet.prototype.killBullet = function() {
-  
-}
-
 Bullet.prototype.update = function(){
-    //player.rotation = this.game.physics.arcade.angleToPointer(player);
-    // this.game.bullets.x = player.x;
-    // this.game.bullets.y = player.y;
-    // debugger;
-    if (this.game.input.activePointer.isDown)
-    {
-      if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0)
-       {
-          nextFire = this.game.time.now + fireRate;
 
-          var bullet = this.game.bullets.getFirstDead();
+  if (this.game.input.activePointer.isDown) {
+    if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0) {
+      nextFire = this.game.time.now + fireRate;
 
-          bullet.reset(this.player.x, this.player.y);
+      var bullet = this.game.bullets.getFirstDead();
 
-          this.game.physics.arcade.moveToPointer(bullet, 1000);
-       }
-    };
+      bullet.reset(this.player.x, this.player.y);
 
-  }
+      this.game.physics.arcade.moveToPointer(bullet, 1000);
+     }
+  };
+
+}
 
 
   module.exports = Bullet;

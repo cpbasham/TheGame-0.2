@@ -32,6 +32,8 @@
       this.game.bullets.enableBody = true;
       this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
       this.game.bullets.createMultiple(1, 'bullet');
+      this.game.bullets.setAll('checkWorldBounds', true);
+      this.game.bullets.setAll('outOfBoundsKill', true);
 
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
       this.game.add.existing(this.bullet1);

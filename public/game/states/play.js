@@ -6,6 +6,7 @@
   var Player = require('../prefabs/player');
   var Bullet = require('../prefabs/bullet');
   var Platform = require('../prefabs/platform');
+  var text;
 
   function Play() {}
 
@@ -20,6 +21,12 @@
 
       //creating players
       this.player1 = new Player(this.game, 100, 100, 'player', true);
+
+      //text above player sprite
+      this.player1.inputEnabled = true;
+      var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.player1.width, align: "center" };
+      text = this.game.add.text(0, 0, "YOLO", style);
+      text.anchor.set(0.5);
       // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
@@ -109,6 +116,11 @@
       function(ground, bullet) {
         bullet.kill();
       }, null, this);
+
+      // name above player positioning
+      text.x = Math.floor(this.player1.x);
+      text.y = Math.floor(this.player1.y - (this.player1.height/2));
+
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
       // this.game.physics.arcade.overlap(this.game.bullets, this.player2,

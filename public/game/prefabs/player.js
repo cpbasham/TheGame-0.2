@@ -58,7 +58,7 @@ Player.prototype.face = function(direction) {
 }
 Player.prototype.animate = function(moving) {
   if (moving) {
-    var velocity = (this.body.direction === "left" ? -750 : 750);
+    var velocity = (this.body.direction === "left" ? -500 : 500);
     this.body.velocity.x = velocity;
     this.animations.play(this.body.direction);
   } else {
@@ -80,7 +80,7 @@ Player.prototype.update = function() {
   cursors = this.game.input.keyboard.createCursorKeys();
 
 
-  this.body.gravity.y = 500;
+  this.body.gravity.y = 750;
   this.body.velocity.x = 0;
 
   if (cursors.left.isDown) {

@@ -19,7 +19,7 @@
       this.background = this.game.add.sprite(0, 0, 'background');
 
       //creating players
-      this.player1 = new Player(this.game, 3100, 100, 'player', true);
+      this.player1 = new Player(this.game, 100, 100, 'player', true);
       // this.player2 = new Player(this.game, 200, 1000, 'player', false);
 
       //adding players to stage
@@ -28,11 +28,23 @@
 
       //platforms
       this.platforms = this.game.add.physicsGroup();
-      this.platforms.create(1398, 355, 'platformLarge');
-      this.platforms.create(500, 225, 'platformSmall');
-      this.platforms.create(200, 600, 'platformSmall');
-      this.platforms.create(3000, 225, 'platformSmall');
-      this.platforms.create(3334, 749, 'platformSmall');
+      var platform = this.platforms.create(1398, 255, 'platformLarge');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(200, 650, 'platformLarge');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(2600, 600, 'platformLarge');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(600, 275, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(230, 195, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(3450, 325, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(2750, 200, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+      var platform = this.platforms.create(1700, 700, 'platformSmall');
+      platform.scale.setTo(1, 0.5);
+
 
       this.platforms.setAll('body.allowGravity', false);
       this.platforms.setAll('body.immovable', true);

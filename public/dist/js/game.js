@@ -378,6 +378,8 @@ Player.prototype.setCollision = function(state) {
 
 Player.prototype.update = function() {
 
+  console.log(this.body.velocity, this.yolo);
+
   this.game.physics.arcade.enable(this);
 
 
@@ -396,6 +398,8 @@ Player.prototype.update = function() {
   } else {
     this.animate(false);
   }
+
+  console.log(cursors.up.isDown);
 
   if (cursors.up.isDown && this.yolo) {
     // debugger;
@@ -569,8 +573,9 @@ module.exports = Menu;
 
       this.background = this.game.add.sprite(0, 0, 'background');
 
+
       //creating players
-      this.player1 = new Player(this.game, 100, 100, 'player', true);
+      this.player1 = new Player(this.game, 3100, 100, 'player', true);
 
       //text above player sprite
       this.player1.inputEnabled = true;
@@ -582,6 +587,7 @@ module.exports = Menu;
       //adding players to stage
       this.game.add.existing(this.player1);
       // this.game.add.existing(this.player2);
+
 
       //platforms
       this.platforms = this.game.add.physicsGroup();
@@ -602,9 +608,11 @@ module.exports = Menu;
       var platform = this.platforms.create(1700, 700, 'platformSmall');
       platform.scale.setTo(1, 0.5);
 
-
       this.platforms.setAll('body.allowGravity', false);
       this.platforms.setAll('body.immovable', true);
+
+
+
 
       //creating and adding weapon for players
       this.game.bullets = this.game.add.group();

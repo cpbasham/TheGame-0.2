@@ -74,6 +74,8 @@ Player.prototype.setCollision = function(state) {
 
 Player.prototype.update = function() {
 
+  console.log(this.body.velocity, this.yolo);
+
   this.game.physics.arcade.enable(this);
 
 
@@ -92,6 +94,8 @@ Player.prototype.update = function() {
   } else {
     this.animate(false);
   }
+
+  console.log(cursors.up.isDown);
 
   if (cursors.up.isDown && this.yolo) {
     // debugger;

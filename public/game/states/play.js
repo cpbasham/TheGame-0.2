@@ -7,8 +7,6 @@
   var Bullet = require('../prefabs/bullet');
   var Platform = require('../prefabs/platform');
 
-
-
   function Play() {}
 
   Play.prototype = {
@@ -23,13 +21,13 @@
       //creating players
       this.player1 = new Player(this.game, 450, 100,  'player1', true);
       this.player2 = new Player(this.game, 200, 100, 'player2', true);
-     this.player3 = new Player(this.game, 300, 100,  'player3', true);
-      this.player4 = new Player(this.game, 400, 100, ' player4', false);
+      this.player3 = new Player(this.game, 300, 100,  'player3', true);
+      this.player4 = new Player(this.game, 400, 100, ' player4', false)''
 
       // //adding players to stage
       this.game.add.existing(this.player1);
-      //this.game.add.existing(this.player2);
-     // this.game.add.existing(this.player3);
+      this.game.add.existing(this.player2);
+      this.game.add.existing(this.player3);
       this.game.add.existing(this.player4);
 
       //creating and adding weapon for players
@@ -47,6 +45,10 @@
       //ground
       this.ground = new Ground(this.game, 0, 1322, 300, 213);
       this.game.add.existing(this.ground);
+
+
+      // this.groundtest = new Ground(this.game, 0, 1000, 1300, 1213);
+      // this.game.add.existing(this.groundtest);
 
       //platforms
       this.platforms = this.game.add.physicsGroup();
@@ -77,9 +79,14 @@
         this.player1.setCollision(false);
       };
 
+      // this.game.physics.arcade.collide(this.player1, this.groundtest);
+
       this.game.physics.arcade.collide(this.player1, this.ground);
       this.game.physics.arcade.collide(this.player2, this.ground);
       this.game.physics.arcade.collide(this.player1, this.platforms);
+      // this.game.physics.arcade.collide(this.player2, this.ground);
+      this.game.physics.arcade.collide(this.player1, this.platforms);
+
       this.game.physics.arcade.collide(this.bullet1, this.ground);
       this.game.physics.arcade.overlap(this.game.bullets, this.ground,
       function(ground, bullet) {
@@ -87,8 +94,8 @@
       }, null, this);
 
       // NEED TO ADD BELOW FUNCTION FOR SOCKET STUFF
-      this.game.physics.arcade.overlap(this.game.bullets, this.player2,
-      this.collisionHandler, null, this);
+      // this.game.physics.arcade.overlap(this.game.bullets, this.player2,
+      //   this.collisionHandler, null, this);
 
       this.game.socketFunctions.updatePlay(this);
     },
@@ -96,10 +103,10 @@
     collisionHandler: function(opponent, bullet){
 
       bullet.kill();
-      opponent.kill()
-      this.flame.reset(opponent.body.x, opponent.body.y-100);
-      this.flame.animations.play('blow', 30, false, true);
-      this.respawn(opponent);
+      // opponent.kill()
+      // this.flame.reset(opponent.body.x, opponent.body.y-100);
+      // this.flame.animations.play('blow', 30, false, true);
+      // this.respawn(opponent);
 
     },
 

@@ -14,6 +14,7 @@ var mountFolder = function (connect, dir) {
 };
 
 module.exports = function (grunt) {
+  var runGruntServer = false;
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -74,8 +75,12 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build', ['buildBootstrapper', 'browserify','copy']);
-  grunt.registerTask('serve', ['build', 'connect:livereload', 'open', 'watch']);
-  grunt.registerTask('default', ['serve']);
+  if (runGruntServer) {
+    grunt.registerTask('serve', ['build', 'connect:livereload', 'open', 'watch']);
+    grunt.registerTask('default', ['serve']);
+  } else {
+    grunt.registerTask('default', ['build']);
+  }
   grunt.registerTask('prod', ['build', 'copy']);
 
   grunt.registerTask('buildBootstrapper', 'builds the bootstrapper file correctly', function() {

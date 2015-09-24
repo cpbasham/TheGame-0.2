@@ -39,55 +39,62 @@ app.use(passport.session());
 
 server.listen(8080);
 
-var nextClientId = 0;
-var playerMap = {};
+var rooms = {};
+// var playerMap = {};
 io.sockets.on("connection", function(socket){
-  console.log("socket connected");
-  socket.clientId = nextClientId;
-  nextClientId++;
-  playerMap[socket.clientId] = {x:0, y:0, dir:"right", isMoving:false, status:"alive"};
-  // console.log("added", socket.clientId, "to playerMap");
+  console.log("Socket connected:", socket.id);
 
-  socket.emit("setup",
-    {
-      clientId: socket.clientId,
-      playerMap: playerMap
-    }
-  );
+  socket.on("knockknock", function(roomId) {
+    socket.gameRoom = roomId;
 
-  // console.log(io.sockets.sockets[0]);
-  // console.log(io.sockets.sockets[1]);
+    socket.join(socket.gameRoom, function() {
+      if (! rooms.hasOwnProperty(socket.gameRoom)) {
+        rooms[socket.gameRoom] = { playerMap: {} };
+      }
+      var playerMap = rooms[socket.gameRoom].playerMap;
+      playerMap[socket.id] = {x:0, y:0, dir:"right", isMoving:false, status:"alive"};
+      console.log(rooms);
+      // console.log(io.)
+      socket.emit("setup", playerMap);
 
-  socket.on("disconnect", function(data) {
-    socket.broadcast.emit("playerDisconnected", {clientId: socket.clientId});
-    delete playerMap[socket.clientId];
+      socket.on("disconnect", function(data) {
+        var room = socket.gameRoom;
+        socket.broadcast.in(room).emit("playerDisconnected", socket.id);
+        delete rooms[room].playerMap[socket.id];
+        if (Object.keys(rooms[room]).length === 0) { // if room empty
+          delete rooms[room];
+        }
+      });
+
+      socket.on("update", function(clientData){
+        var playerMap = rooms[socket.gameRoom].playerMap;
+        var serverPlayer  = playerMap[socket.id];
+        serverPlayer.x    = clientData.player.position.x;
+        serverPlayer.y    = clientData.player.position.y;
+        serverPlayer.dir  = clientData.player.direction;
+        serverPlayer.currentFrame = clientData.player.currentFrame;
+        serverPlayer.bullets = clientData.bullets;
+        for (var i in clientData.hitPlayers) {
+          var hitPlayerId = clientData.hitPlayers[i].id;
+          playerMap[hitPlayerId].status = "hit";
+        }
+      });
+
+      socket.broadcast.in(socket.gameRoom).emit("newPlayer", socket.id);
+    });
+
   });
 
-  socket.on("play", function(data){
-    socket.broadcast.emit("newPlayer", {clientId: socket.clientId});
-    // console.log(data.data)
-  });
-
-  socket.on("update", function(clientData){
-    var serverPlayer  = playerMap[socket.clientId];
-    serverPlayer.x    = clientData.player.position.x;
-    serverPlayer.y    = clientData.player.position.y;
-    serverPlayer.dir  = clientData.player.direction;
-    serverPlayer.currentFrame = clientData.player.currentFrame;
-    serverPlayer.bullets = clientData.bullets;
-    for (var i in clientData.hitPlayers) {
-      var hitPlayerId = clientData.hitPlayers[i].id;
-      playerMap[hitPlayerId].status = "hit";
-    }
-  });
 });
 
 
-
 setInterval(function() {
-  io.emit("updateAll", playerMap);
-  for (var key in playerMap) {
-    checkPlayer(playerMap[key]);
+  for (var room in rooms) {
+    var playerMap = rooms[room].playerMap;
+    io.in(room).emit("updateAll", playerMap);
+    for (var key in playerMap) {
+      checkPlayer(playerMap[key]);
+    }
   }
 }, 1000 / 30);
 // }, 1000 / 1);
@@ -97,7 +104,6 @@ function checkPlayer(player) {
     player.status = "dead";
     setTimeout(function() {
       player.status = "alive";
-      // console.log("P KEY:", key);
     }, 1000);
   }
 }

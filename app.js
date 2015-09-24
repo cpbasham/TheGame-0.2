@@ -39,6 +39,17 @@ app.use(passport.session());
 
 server.listen(8080);
 
+function getRooms() {
+  var roomInfo = [];
+  for (var room in rooms) {
+    if(rooms.hasOwnProperty(room)) {
+        var playerMap = rooms[room].playerMap;
+        roomInfo.push( {name: room, numPlayers: playerMap.keys.length} );
+    }
+  }
+  return roomInfo;
+}
+
 var rooms = {};
 // var playerMap = {};
 io.sockets.on("connection", function(socket){

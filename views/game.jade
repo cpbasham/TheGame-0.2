@@ -1,11 +1,14 @@
-doctype html
-html
-  head
-    title= title
-    script(src="http://code.jquery.com/jquery-latest.min.js")
-    script(src="/socket.io/socket.io.js")
+extends layout
+block content
+  script(src="http://code.jquery.com/jquery-latest.min.js")
+  script(src="/socket.io/socket.io.js")
   body
-    #thegame
+    header(class="intro")
+      div(class="intro-body")
+        div(class="container")
+          div(class="row")
+            div(class="col-md-1")
+            #thegame
     script(src='../dist/js/phaser.js')
     script(src='../dist/js/game.js')
 

@@ -1,0 +1,16 @@
+html {
+  background: url(http://www.direktgeneral.hu/wp-content/uploads/tegla_fapadlo.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#gameTitle{
+  color: white;
+}
+#banner{
+  background-color:#3a4040;
+  width: 800px;
+  margin: 0 auto;
+}

@@ -5,6 +5,8 @@ var cursors;
 var Player = function(game, x, y, player, controllable, frame) {
   Phaser.Sprite.call(this, game, x, y, player, controllable, frame);
 
+  this.scale.setTo(0.5, 0.5);
+
   this.game.physics.enable(this, Phaser.Physics.ARCADE);
   this.game.add.existing(this);
 
@@ -40,10 +42,10 @@ Player.prototype.constructor = Player;
 Player.prototype.face = function(direction) {
   if (direction === "left") {
     this.body.direction = "left";
-    this.scale.x = -1;
+    this.scale.x = -0.5;
   } else if (direction === "right") {
     this.body.direction = "right";
-    this.scale.x = 1;
+    this.scale.x = 0.5;
   }
 }
 Player.prototype.animate = function(moving) {
@@ -77,12 +79,12 @@ Player.prototype.update = function() {
     this.face("right");
     this.animate(true);
   } else {
-    this.animations.play('shoot', 15, false);
+    this.animations.play('shoot', 30, false);
   }
   // console.log(cursors.up.isDown);
 
   if (cursors.up.isDown && this.yolo) {
-
+    this.animations.play('jump', 1, true);
     this.body.position.y -= 1;
     this.body.velocity.y = -450;
   }

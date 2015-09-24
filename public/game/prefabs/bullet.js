@@ -34,19 +34,22 @@ Bullet.prototype.update = function(){
       //animate when fire(click)
       bullet.animations.add('spin');
 
-      console.log(this.player.body.direction);
+      bullet.scale.setTo(0.5, 0.5);
+
       bullet.animations.play('spin', 60, true);
 
       if (this.player.body.direction === 'left'){
-        bullet.reset(this.player.x - 225, this.player.y + 40);
+        bullet.reset(this.player.x - 70, this.player.y - 42);
+        this.scale.x = -0.5;
        }else if (this.player.body.direction === 'right'){
-        bullet.reset(this.player.x + 150, this.player.y + 40);
+        bullet.reset(this.player.x + 30, this.player.y - 42);
+        this.scale.x = 0.5;
        };
       //bullet.anchor.setTo(this.player.x, this.player.y);
 
       //bullet.reset(this.player.x+ 150, this.player.y -25);
 
-      this.game.physics.arcade.moveToPointer(bullet, 500);
+      this.game.physics.arcade.moveToPointer(bullet, 1000);
      }
   };
 

@@ -32,6 +32,7 @@ module.exports = function(express,passport){
     res.render('game', {title: 'DA GAME', user: req.user });
   });
 
+
   router.get('/rooms', function(req,res){
     res.render('rooms', {title: 'Room View', user: req.user });
   });

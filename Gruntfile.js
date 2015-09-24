@@ -14,7 +14,7 @@ var mountFolder = function (connect, dir) {
 };
 
 module.exports = function (grunt) {
-  var runGruntServer = true;
+  var runGruntServer = false;
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
     },
     connect: {
       options: {
-        port: 3000,
+        port: 8080,
         // change this to '0.0.0.0' to access the server from outside
         hostname: 'localhost'
       },

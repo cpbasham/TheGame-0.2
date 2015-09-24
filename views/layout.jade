@@ -3,17 +3,31 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-    div(class="header")
-    div(class="authentication")
-      if user
-        span Welcome to The GAME!
-        span
-          a(href="/logout") Logout
-      else
-        a(href="/auth/google") Google &nbsp;
-        a(href="/auth/facebook") Facebook
-    script(src="http://code.jquery.com/jquery-latest.min.js")
-    script(src="/socket.io/socket.io.js")
-    body
-      block content
+    link(href="/stylesheets/grayscale.css", rel="stylesheet")
+    link(rel="stylesheet", href="/stylesheets/bootstrap.css")
+    link(href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic", rel="stylesheet", type="text/css")
+    link(href="http://fonts.googleapis.com/css?family=Montserrat:400,700", rel="stylesheet", type="text/css")
+    nav(class="navbar navbar-custom navbar-fixed-top", role="navigation")
+        div(class="container")
+            div(class="navbar-header")
+            div(class="collapse navbar-collapse navbar-right navbar-main-collapse")
+                ul(class="nav navbar-nav")
+                    li(class="hidden")
+                        a(href="#page-top")
+                     if user
+                        li
+                            div Welcome to
+                                strong  The GAME !
+                        li
+                            a(class="page-scroll", href="/logout", style="text-color: black") Logout
+                     else
+                        li
+                            a(class="page-scroll", href="/auth/google") Google
+                        li
+                             a(class="page-scroll", href="") |
+                        li
+                            a(href="/auth/facebook") Facebook
+
+  body
+    block content
 

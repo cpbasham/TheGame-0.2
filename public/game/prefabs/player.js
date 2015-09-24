@@ -67,15 +67,22 @@ Player.prototype.update = function() {
 
   // console.log(this.body.velocity, this.yolo);
 
+  this.wasd = {
+    up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+    down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+    left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+    right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+  };
+
   this.game.physics.arcade.enable(this);
   cursors = this.game.input.keyboard.createCursorKeys();
   this.body.gravity.y = 500;
   this.body.velocity.x = 0;
 
-  if (cursors.left.isDown) {
+  if (cursors.left.isDown || this.wasd.left.isDown) {
     this.face("left");
     this.animate(true);
-  } else if (cursors.right.isDown) {
+  } else if (cursors.right.isDown || this.wasd.right.isDown) {
     this.face("right");
     this.animate(true);
   } else {
@@ -83,7 +90,7 @@ Player.prototype.update = function() {
   }
   // console.log(cursors.up.isDown);
 
-  if (cursors.up.isDown && this.yolo) {
+  if ((cursors.up.isDown || this.wasd.up.isDown) && this.yolo) {
     this.animations.play('jump', 1, true);
     this.body.position.y -= 1;
     this.body.velocity.y = -450;

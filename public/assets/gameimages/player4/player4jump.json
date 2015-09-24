@@ -1,0 +1,92 @@
+{"frames": {
+
+"Jump__000.png":
+{
+	"frame": {"x":271,"y":2,"w":96,"h":156},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":99,"y":9,"w":96,"h":156},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__001.png":
+{
+	"frame": {"x":2,"y":2,"w":105,"h":179},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":83,"y":7,"w":105,"h":179},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__002.png":
+{
+	"frame": {"x":109,"y":2,"w":160,"h":163},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":7,"w":160,"h":163},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__003.png":
+{
+	"frame": {"x":109,"y":2,"w":160,"h":163},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":7,"w":160,"h":163},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__004.png":
+{
+	"frame": {"x":109,"y":2,"w":160,"h":163},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":7,"w":160,"h":163},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__005.png":
+{
+	"frame": {"x":109,"y":2,"w":160,"h":163},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":7,"w":160,"h":163},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__006.png":
+{
+	"frame": {"x":369,"y":2,"w":171,"h":149},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":7,"w":171,"h":149},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__007.png":
+{
+	"frame": {"x":542,"y":2,"w":177,"h":148},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":7,"w":177,"h":148},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__008.png":
+{
+	"frame": {"x":721,"y":2,"w":178,"h":140},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":7,"w":178,"h":140},
+	"sourceSize": {"w":200,"h":187}
+},
+"Jump__009.png":
+{
+	"frame": {"x":721,"y":2,"w":178,"h":140},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":7,"w":178,"h":140},
+	"sourceSize": {"w":200,"h":187}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "player4jump.png",
+	"format": "RGBA8888",
+	"size": {"w":901,"h":183},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:713ef52996c4f830161af18acb8c41d9:2114891383e4ba269ef26c04f4af7afa:576c8a04bcff27682904d0f6fb633e30$"
+}
+}

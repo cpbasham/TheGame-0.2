@@ -20,10 +20,6 @@
       //   this.game.scale.startFullScreen();
       // };
 
-
-
-    this.stage.backgroundColor = "#000"
-
       this.enemies = {players: {}, bullets: {}};
 
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -33,21 +29,21 @@
 
       //creating players
       this.player1 = new Player(this.game, 450, 100,  'player1', true);
-      this.player2 = new Player(this.game, 200, 100, 'player2', false);
-      this.player3 = new Player(this.game, 300, 100,  'player3', false);
-      this.player4 = new Player(this.game, 400, 100, 'player4', false);
+      // this.player2 = new Player(this.game, 200, 100, 'player2', false);
+      // this.player3 = new Player(this.game, 300, 100,  'player3', false);
+      // this.player4 = new Player(this.game, 400, 100, 'player4', false);
 
       //text above player sprite
       this.player1.inputEnabled = true;
-      var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.player1.width, align: "center" };
+      var style = { font: "20px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.player1.width, align: "center" };
       text = this.game.add.text(0, 0, "YOLO", style);
       text.anchor.set(0.5);
 
       //adding players to stage
       this.game.add.existing(this.player1);
-      this.game.add.existing(this.player2);
-      this.game.add.existing(this.player3);
-      this.game.add.existing(this.player4);
+      // this.game.add.existing(this.player2);
+      // this.game.add.existing(this.player3);
+      // this.game.add.existing(this.player4);
 
       //platforms
       this.platforms = this.game.add.physicsGroup();
@@ -80,43 +76,25 @@
       this.game.bullets.setAll('outOfBoundsKill', true);
 
       this.bullet1 = new Bullet(this.game, this.player1.x, this.player1.y, this.player1);
-      //this.game.add.existing(this.bullet1);
-
-      //ground
-      // this.ground = new Ground(this.game, 0, 1322, 300, 213);
-      // this.game.add.existing(this.ground);
-
-      // this.groundtest = new Ground(this.game, 0, 1000, 1300, 1213);
-      // this.game.add.existing(this.groundtest);
-
-      //platforms
-      // this.platforms = this.game.add.physicsGroup();
-      // this.platforms.create(100, 1200, 'ground');
-      // this.platforms.create(100, 100, 'ground');
-      // this.platforms.create(200, 200, 'ground');
-      // this.platforms.setAll('body.allowGravity', false);
-      // this.platforms.setAll('body.immovable', true);
+      // this.game.add.existing(this.bullet1);
 
       //ground
       this.ground = new Ground(this.game, 0, 982, 4096, 41);
       this.game.add.existing(this.ground);
 
-      // this.platforms.create(100, 1200, 'ground');
-      // this.platforms.create(100, 100, 'ground');
-      // this.platforms.create(200, 200, 'ground');
-      // this.platforms.setAll('body.velocity.x', 100);
-
-
+      // debugger;
       //camera following player
       this.game.camera.follow(this.player1);
 
       //explsions
       this.flame = this.game.add.sprite(0, 0, 'kaboom');
+      this.flame.visible = false;
       this.flame.scale.setTo(1.5, 1.5);
       this.blow = this.flame.animations.add('blow');
 
-      this.groundexplosion = this.game.add.sprite(0, 0, 'groundexp');
-      this.boom = this.groundexplosion.animations.add('boom')
+      // Are we using this?? TODO !!!!!!
+      // this.groundexplosion = this.game.add.sprite(0, 0, 'groundexp');
+      // this.boom = this.groundexplosion.animations.add('boom')
 
       this.game.socketFunctions.createPlay(this);
     },

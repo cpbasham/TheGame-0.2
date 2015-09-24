@@ -31,14 +31,16 @@ socketFunctions.createPlay = function(ctx) {
   socket.on("setup", function(playerMap) {
     for (var key in playerMap) {
       if (key === socket.id) {continue;}
-      var enemy = new Player(game, 200, 100, 'player', false);
+      var enemySprite = "player" + (Math.floor(Math.random()*3) + 2);
+      var enemy = new Player(game, 200, 100, enemySprite, false);
       game.add.existing(enemy);
       enemies.players[key] = enemy;
       enemies.bullets[key] = [];
     }
   });
   socket.on("newPlayer", function(playerId) {
-    var enemy = new Player(game, 200, 100, 'player', false);
+    var enemySprite = "player" + (Math.floor(Math.random()*3) + 2);
+    var enemy = new Player(game, 200, 100, enemySprite, false);
     game.add.existing(enemy);
     enemies.players[playerId] = enemy;
     enemies.bullets[playerId] = [];
@@ -97,13 +99,23 @@ socketFunctions.updatePlay = function(ctx) {
 function handleSelf(data, key, ctx) {
   var self = ctx.player1;
   if (data[key].status === "alive") {
-    self.visible = true;
   } else if (data[key].status === "hit") {
     ctx.flame.reset(self.body.x, self.body.y-100);
     ctx.flame.animations.play('blow', 30, false, true);
-  } else {
-    self.visible = false;
+    self.kill();
+  } else if (data[key].status === "respawning") {
+    ctx.respawn(self);
+  } else if (data[key].status === "dead") {
   }
+}
+
+function createBullet(serverEnemyData, clientEnemyBullets, game, enemy, i) {
+  var bulletData = serverEnemyData.bullets[i];
+  var bullet = new Bullet(game, bulletData.x, bulletData.y, enemy);
+  game.add.existing(bullet);
+  clientEnemyBullets.push(bullet);
+  // console.log("SERVER DATA: (", bulletData.x, ",", bulletData.y, ")");
+  // console.log("CLIENT DATA: (", bulletData.x, ",", bulletData.y, ")");
 }
 
 function handleEnemy(data, key, ctx) {
@@ -119,22 +131,24 @@ function handleEnemy(data, key, ctx) {
   enemy.frame = enemyData.currentFrame;
   // enemy.animate(enemyData.isMoving)
   // enemy.bulletInfo = enemyData.bullets
+  // console.log(enemyData.bullets);
   while (enemyBullets.length > 0) { enemyBullets.pop().destroy(); }
 
   for (var i=0; i<enemyData.bullets.length; i++) {
-    bulletData = enemyData.bullets[i];
-    var bullet = new Bullet(game, bulletData.x, bulletData.y, enemy);
-    game.add.existing(bullet);
-    enemyBullets.push(bullet);
+    // console.log("ENEMY ID:", key);
+    createBullet(enemyData, enemyBullets, game, enemy, i);
+    // debugger;
   }
+  // console.log("UPDATE DONE");
 
   if (enemyData.status === "alive") {
-    enemy.visible = true;
   } else if (enemyData.status === "hit") {
     ctx.flame.reset(enemy.body.x, enemy.body.y-100);
     ctx.flame.animations.play('blow', 30, false, true);
-  } else {
-    enemy.visible = false;
+    enemy.kill();
+  } else if (enemyData.status === "respawning") {
+    ctx.respawn(enemy);
+  } else if (enemyData.status === "dead") {
   }
 }
 

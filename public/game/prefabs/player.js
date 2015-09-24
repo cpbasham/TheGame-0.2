@@ -26,6 +26,7 @@ var Player = function(game, x, y, player, controllable, frame) {
 
   this.game.physics.arcade.enableBody(this);
   this.body.collideWorldBounds = true;
+  this.body.direction = "right";
 
   var game = this.game;
   var ctx = this;

@@ -64,7 +64,7 @@ io.sockets.on("connection", function(socket){
       }
       var playerMap = rooms[socket.gameRoom].playerMap;
       playerMap[socket.id] = {x:0, y:0, dir:"right", isMoving:false, status:"alive"};
-      console.log(rooms);
+      // console.log(rooms);
       // console.log(io.)
       socket.emit("setup", playerMap);
 
@@ -85,6 +85,11 @@ io.sockets.on("connection", function(socket){
         serverPlayer.dir  = clientData.player.direction;
         serverPlayer.currentFrame = clientData.player.currentFrame;
         serverPlayer.bullets = clientData.bullets;
+        // if (serverPlayer.bullets.length > 0) {
+          // console.log("CLIENT BULLETS", clientData.bullets);
+          // console.log("SERVER BULLETS", serverPlaye)
+          // console.log(socket.id);
+        // }
         for (var i in clientData.hitPlayers) {
           var hitPlayerId = clientData.hitPlayers[i].id;
           playerMap[hitPlayerId].status = "hit";
@@ -114,8 +119,10 @@ function checkPlayer(player) {
   if (player.status === "hit") {
     player.status = "dead";
     setTimeout(function() {
-      player.status = "alive";
+      player.status = "respawning";
     }, 1000);
+  } else if (player.status === "respawning") {
+    player.status = "alive";
   }
 }
 

@@ -2,7 +2,7 @@
 
 var bullets;
 
-var fireRate = 100;
+var fireRate = 1000;
 var nextFire = 0;
 
 var Bullet = function(game, x, y, player) {
@@ -10,7 +10,7 @@ var Bullet = function(game, x, y, player) {
 
   this.game.bullets.add(this);
 
-  this.visible = false;
+  // this.visible = false;
 
   this.animations.add('spin',[0,1, 2, 3, 4, 5, 6, 7, 8, 9], 60, true);
   this.alive = true;
@@ -18,9 +18,10 @@ var Bullet = function(game, x, y, player) {
   this.player = player
   this.game.physics.arcade.enableBody(this);
   // player.body.allowRotation = false;
-  this.checkWorldBounds = true;
-  this.outOfBoundsKill = true;
-  this.body.collideWorldBounds = true;
+
+  // this.checkWorldBounds = true;
+  // this.outOfBoundsKill = true;
+  // this.body.collideWorldBounds = true;
 
 };
 
@@ -33,6 +34,8 @@ Bullet.prototype.update = function(){
     if (this.game.time.now > nextFire && this.game.bullets.countDead() > 0) {
       nextFire = this.game.time.now + fireRate;
       var bullet = this.game.bullets.getFirstDead();
+
+      setTimeout(function() {bullet.kill();}, 5000);
 
       //animate when fire(click)
       bullet.animations.add('spin');
@@ -51,7 +54,9 @@ Bullet.prototype.update = function(){
       //bullet.anchor.setTo(this.player.x, this.player.y);
 
       //bullet.reset(this.player.x+ 150, this.player.y -25);
-
+      // console.log("Player: (", this.player.position.x, ",", this.player.position.y, ")");
+      // console.log("Bullet: (", this.x, ",", this.y, ")");
+      // console.log("------");
       this.game.physics.arcade.moveToPointer(bullet, 1000);
      }
   };

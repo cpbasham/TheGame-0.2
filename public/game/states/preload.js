@@ -19,6 +19,10 @@ Preload.prototype = {
     this.load.image('platformSmall', 'assets/images/platformsmall.png');
     this.load.image('platformLarge', 'assets/images/platformlarge.png');
     this.load.image('ground', 'assets/images/newGround.png');
+    this.load.image('menuBackground', 'assets/images/menuBackground.png');
+    this.load.image('menuGround', 'assets/images/menuGround.png');
+
+    this.load.image('titleText', 'assets/images/daGame.png');
 
 
     //load game assets: (OLD)
@@ -43,7 +47,8 @@ Preload.prototype = {
 
     //loading bullets
     this.load.atlasJSONHash('orangespin', '../assets/bullets/orangespin.png', '../assets/bullets/orangespin.json');
-    this.load.atlasJSONHash('groundexp', '../assets/bullets/groundexp.png', '../assets/bullets/orangespin.json');
+    this.load.atlasJSONHash('groundexp', '../assets/bullets/groundexp.png', '../assets/bullets/groundexp.json');
+    this.load.atlasJSONHash('missile', '../assets/bullets/missile.png', '../assets/bullets/missile.json');
   },
   create: function() {
     this.asset.cropEnabled = false;

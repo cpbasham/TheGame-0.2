@@ -12,16 +12,15 @@
 
   Play.prototype = {
     create: function() {
+      //TODO: Go FullScreen
+      // this.game.input.onDown.add(gofull, this)
 
-      this.game.input.onDown.add(gofull, this)
+      // function gofull() {
+      //   this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+      //   this.game.scale.startFullScreen();
+      // };
 
-      function gofull() {
-        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.scale.startFullScreen();
 
-      };
-
-     // this.game.scale.enterFullScreen();
 
     this.stage.backgroundColor = "#000"
 
@@ -76,7 +75,7 @@
       this.game.bullets = this.game.add.group();
       this.game.bullets.enableBody = true;
       this.game.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-      this.game.bullets.createMultiple(3, 'orangespin');
+      this.game.bullets.createMultiple(20, 'orangespin');
       this.game.bullets.setAll('checkWorldBounds', true);
       this.game.bullets.setAll('outOfBoundsKill', true);
 

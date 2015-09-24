@@ -20,7 +20,7 @@ module.exports = function(express,passport){
   );
 
 
-  router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+  router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
       successRedirect : '/rooms',
@@ -29,18 +29,13 @@ module.exports = function(express,passport){
   );
 
   router.get('/thegame', function(req,res){
-    res.render('game', {title: 'DA GAME', user: req.user});
+    res.render('game', {title: 'DA GAME', user: req.user });
   });
 
-    router.get('/rooms', function(req,res){
-    res.render('rooms', {title: 'Room View', user: req.user});
+  router.get('/rooms', function(req,res){
+    res.render('rooms', {title: 'Room View', user: req.user });
   });
 
-  function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
-      return next();
-    res.redirect('/');
-  }
   return router;
 }
 

@@ -1,7 +1,12 @@
 extends layout
 
 block content
-  h1 Welcome #{user}
+  h1 Welcome
+  div(class="user")
+    if user.facebook
+      h2 #{user.facebook.name}
+    if user.google
+      h2 #{user.google.name}
   h1 All The Rooms!
   <br>
   a(href="/thegame") DA GAME!

@@ -37,7 +37,7 @@ module.exports = function(passport) {
             newUser.google.id    = profile.id;
             newUser.google.token = token;
             newUser.google.name  = profile.displayName;
-            newUser.google.email = profile.emails[0].value; // pull the first email
+            newUser.google.email = profile.emails[0].value;
             newUser.save(function(err) {
               if (err)
                 throw err;
@@ -65,7 +65,7 @@ module.exports = function(passport) {
             var newUser            = new User();
             newUser.facebook.id    = profile.id;
             newUser.facebook.token = token;
-            newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
+            newUser.facebook.name  = profile.displayName;
             newUser.save(function(err) {
               if (err)
                 throw err;

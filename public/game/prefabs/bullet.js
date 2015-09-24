@@ -9,6 +9,9 @@ var Bullet = function(game, x, y, player) {
   Phaser.Sprite.call(this, game, x, y, 'orangespin');
 
   this.game.bullets.add(this);
+
+  this.visible = false;
+
   this.animations.add('spin',[0,1, 2, 3, 4, 5, 6, 7, 8, 9], 60, true);
   this.alive = true;
   //this.game.physics.startSystem(Phaser.Physics.ARCADE);

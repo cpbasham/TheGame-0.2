@@ -29,8 +29,8 @@ Built with a team of 5 over a 6 day period, our goal for this project was to dis
   
 ## The Team
 
-Team Lead: Cameron Basham
-Team Members: Makeven Yan, Philip Yoo, Mark Sunghyuk Park, Arturo Perez
+*Team Lead: Cameron Basham
+*Team Members: Makeven Yan, Philip Yoo, Mark Sunghyuk Park, Arturo Perez
 
 ##How to run Locally:
 Via the Command Line

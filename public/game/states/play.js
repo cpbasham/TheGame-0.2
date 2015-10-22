@@ -13,12 +13,12 @@
   Play.prototype = {
     create: function() {
       //TODO: Go FullScreen
-      this.game.input.onDown.add(gofull, this)
-
-      function gofull() {
-        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-        this.game.scale.startFullScreen();
-      };
+      // this.game.input.onDown.add(gofull, this)
+      //
+      // function gofull() {
+      //   this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+      //   this.game.scale.startFullScreen();
+      // };
 
       this.enemies = {players: {}, bullets: {}};
 
